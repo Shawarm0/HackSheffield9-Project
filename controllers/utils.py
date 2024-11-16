@@ -11,9 +11,8 @@ from scipy.io.wavfile import write
 
 
 from flask import Blueprint, render_template
-import pyttestx3
+import pyttsx3
 import io
-
 
 def text_to_speech(text):
     # Initialize the speech engine
@@ -23,23 +22,14 @@ def text_to_speech(text):
     engine.setProperty('rate', 150)  # Speed of speech
     engine.setProperty('volume', 1)  # Volume level (0.0 to 1.0)
 
-    # Convert the input text to speech
-    engine.say(text)
+    # Split the input text into lines
+    lines = text.splitlines()
 
-    # Wait for the speech to finish
-    engine.runAndWait()
-
-def speak():
-    """Receive text, convert it to speech, and return the audio file in-memory for playback."""
-    text = request.form.get("text")  # Get the text from the POST request
-    if not text:
-        return "No text provided", 400  # Return an error if no text is provided
-
-    # Generate speech from text and get the in-memory file
-    speech_buffer = text_to_speech(text)
-
-    # Send the generated speech as an audio file in-memory for playback
-    return Response(speech_buffer, mimetype="audio/mp3")
+    # Convert each line to speech
+    for line in lines:
+        if line.strip():  # Skip empty lines
+            engine.say(line)
+            engine.runAndWait() 
 
 
 def speech_to_text(file_name: str):

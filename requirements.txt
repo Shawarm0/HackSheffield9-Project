@@ -20,15 +20,13 @@ sounddevice
 scipy 
 
 #for tts
-pyttestx3
+pyttsx3
 
 #whisper
 git+https://github.com/openai/whisper.git
 # openai-whisper
 ffmpeg
 tiktoken
-# text to speech
-gTTS
 
 #gemini 
 google-generativeai
