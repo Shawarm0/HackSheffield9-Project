@@ -6,9 +6,10 @@ Jinja2
 MarkupSafe
 Werkzeug
 
+Flask-WTF
+
 python-dotenv
 # text to speech functions
-io 
 response
 
 # mongo requirements
@@ -20,11 +21,14 @@ scipy
 
 #whisper
 git+https://github.com/openai/whisper.git
+# openai-whisper
 ffmpeg
 tiktoken
+# text to speech
+gTTS
 
 #gemini 
--q -U google-generativeai
+google-generativeai
 
 # below not used yet
 # # Flask Functionality Packages
