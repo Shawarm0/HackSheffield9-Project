@@ -1,0 +1,73 @@
+{% extends "base.html"%}
+
+{%block content%}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Record Audio</title>
+    <style>
+
+        /* Spinner styles */
+        #loading-spinner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none; /* Initially hidden */
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Audio Recorder</h1>
+
+    <div id="results-container">
+        <form id="form" action="/reload_answer" method="POST">
+            {% for answer in answers %}
+                <label>
+                    <input type="radio" name="answer" value="{{answer}}" id="answer-{{ loop.index }}">
+                    {{ answer }}
+                </label>
+            {% endfor %}
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+
+    </div>
+
+    <div>
+        <br>
+        <button id="new-idea-button">Start a new idea!</button>
+    </div>
+
+    <div id="loading-spinner"></div>
+
+
+    <script>
+
+        document.getElementById("new-idea-button").addEventListener("click", () => {
+            window.location.href = "/dysgraphia";
+        });
+
+    </script>
+</body>
+</html>
+{%endblock%}
