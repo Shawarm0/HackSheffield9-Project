@@ -21,10 +21,14 @@
             </div>
         </div>
         <button type="submit" class="btn btn-primary mt-3">Submit</button>
+        <button type="button" id="quit-button" class="btn btn-danger mt-3 d-none">Quit</button>
     </form>
 </div>
 
 <script>
+    const quitButton = document.getElementById("quit-button");
+    const outputField = document.getElementById("output");
+
     document.getElementById("dyslexia-form").addEventListener("submit", async function (event) {
         event.preventDefault(); // Prevent the form from submitting normally
         const text = document.getElementById("text").value;
@@ -41,9 +45,22 @@
         // Handle the response
         if (response.ok) {
             const data = await response.json(); // Parse JSON response
-            document.getElementById("output").value = data.processed_text; // Update the output box
+            outputField.value = data.processed_text; // Update the output box
+            quitButton.classList.remove("d-none"); // Show the quit button
         } else {
             console.error("Failed to process text.");
+        }
+    });
+
+    quitButton.addEventListener("click", async function () {
+        // Send a request to stop the TTS process
+        const response = await fetch("/dyslexia/quit", { method: "POST" });
+
+        if (response.ok) {
+            outputField.value = ""; // Clear the output box
+            quitButton.classList.add("d-none"); // Hide the quit button
+        } else {
+            console.error("Failed to stop TTS.");
         }
     });
 </script>
