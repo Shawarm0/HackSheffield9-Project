@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container mt-5">
     <h2 class="text-center">Text to Speech for Dyslexia Support</h2>
-    <form method="POST" action="/dyslexia">  <!-- Directly using the /dyslexia route -->
+    <form id="dyslexia-form" method="POST">
         <div class="form-group">
             <label for="text">Enter your text below:</label>
             <textarea id="text" name="text" class="form-control" rows="5" placeholder="Type text here..."></textarea>
@@ -11,5 +11,29 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
-{% endblock %}
 
+<script>
+    document.getElementById("dyslexia-form").addEventListener("submit", async function (event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+        const text = document.getElementById("text").value;
+
+        // Send the input text to the Flask route via Fetch API
+        const response = await fetch("/dyslexia", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ text: text })
+        });
+
+        // Handle the response
+        if (response.ok) {
+            const data = await response.json(); // Parse JSON response
+            document.getElementById("text").value = data.processed_text; // Update textarea
+        } else {
+            console.error("Failed to process text.");
+        }
+    });
+</script>
+{% endblock %}
+
