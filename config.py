@@ -7,6 +7,8 @@ if __name__ == "__main__":
 
 app.config["WTF_CSRF_ENABLED"] = False
 
+app.config["WTF_CSRF_ENABLED"] = False
+
 # blueprints config - routing
 from controllers.dyspraxia.views import dyspraxia_bp
 from controllers.dyslexia.views import dyslexia_bp
