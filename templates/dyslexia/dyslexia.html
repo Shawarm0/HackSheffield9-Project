@@ -3,22 +3,13 @@
 {% block content %}
 <div class="container mt-5">
     <h2 class="text-center">Text to Speech for Dyslexia Support</h2>
-    <form method="POST" action="{{ url_for('dyslexia.speak') }}">
+    <form method="POST" action="/dyslexia">  <!-- Directly using the /dyslexia route -->
         <div class="form-group">
             <label for="text">Enter your text below:</label>
             <textarea id="text" name="text" class="form-control" rows="5" placeholder="Type text here..."></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Convert to Speech</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
-
-    {% if audio_url %}
-    <div class="mt-4">
-        <h4>Speech Output:</h4>
-        <audio controls>
-            <source src="{{ audio_url }}" type="audio/mp3">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-    {% endif %}
 </div>
 {% endblock %}
+
