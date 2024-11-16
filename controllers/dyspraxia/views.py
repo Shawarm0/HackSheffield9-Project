@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify
+from controllers.utils import image_to_gemini
 import os
 
 dyspraxia_bp = Blueprint("dyspraxia", __name__, template_folder="templates")
@@ -21,7 +22,7 @@ def dyspraxia():
         # Save the file to the 'images/' folder
         file_path = os.path.join(UPLOAD_FOLDER, file.filename)
         file.save(file_path)
-
+        image_to_gemini(file.filename)
         return jsonify({"message": "File uploaded successfully!"}), 200
 
     return render_template("dyspraxia/dyspraxia.html")
