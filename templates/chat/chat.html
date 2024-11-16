@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Chat</h1>
+
+    <!-- Embedded CSS Styles for Chat Layout -->
+    <style>
+        /* Overall chat history container */
+        .chat-history {
+            max-width: 600px;
+            height: 400px; /* Fixed height for scrollable container */
+            margin: 0 auto;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            overflow-y: auto; /* Enable vertical scrolling */
+            visibility: hidden; /* Hide initially */
+        }
+
+        /* Message container styling */
+        .message-container {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .gemini-container {
+            justify-content: flex-start;
+        }
+
+        .user-container {
+            justify-content: flex-end;
+        }
+
+        /* Individual message styling */
+        .message {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        /* Gemini message styling (aligned to the left) */
+        .gemini-message {
+            background-color: #f3e5f5;
+            color: #6a1b9a;
+            text-align: left;
+        }
+
+        /* User message styling (aligned to the right) */
+        .user-message {
+            background-color: #e1f5fe;
+            color: #0277bd;
+            text-align: left;
+        }
+    </style>
+
+    <!-- Chat Input Form -->
+    <form method="post" style="margin-bottom: 20px;">
+        {{ form.hidden_tag() }}
+        {{ form.user_input.label }}<br>
+        {{ form.user_input(size=40) }}<br><br>
+        {{ form.submit() }}
+        <input type="hidden" name="previous_gemini_response" value="{{ chat_history[-1]['gemini'] if chat_history else '' }}">
+    </form>
+
+    <!-- Scrollable Chat History Container -->
+    <div class="chat-history" id="chatHistory">
+        {% for entry in chat_history %}
+            <!-- User Message Container (Right-aligned) -->
+            <div class="message-container user-container">
+                <div class="message user-message">
+                    <strong>User:</strong> {{ entry.get('user', '') }}
+                </div>
+            </div>
+            
+            <!-- Gemini Message Container (Left-aligned) -->
+            <div class="message-container gemini-container">
+                <div class="message gemini-message">
+                    <strong>Gemini:</strong> {{ entry.get('gemini', '') }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- JavaScript to display chat history if messages exist -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var chatHistory = document.getElementById("chatHistory");
+            // Check if there are messages in the chat history
+            if (chatHistory.innerHTML.trim() !== "") {
+                chatHistory.style.visibility = "visible";
+            }
+        });
+    </script>
+{% endblock %}
