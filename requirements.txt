@@ -1,0 +1,31 @@
+# Flask Framework Packages
+click
+Flask
+itsdangerous
+Jinja2
+MarkupSafe
+Werkzeug
+
+python-dotenv
+
+# mongo requirements
+pymongo[srv]
+Flask-PyMongo
+
+
+
+# below not used yet
+# # Flask Functionality Packages
+# Flask-Login
+# Flask-Migrate
+# Flask-Script
+# Flask-SQLAlchemy
+# Flask-WTF
+# Flask-Admin
+# flask-qrcode
+# WTForms
+
+
+# pyotp
+# argon2-cffi
+# cryptography
