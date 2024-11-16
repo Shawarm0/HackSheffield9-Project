@@ -6,6 +6,9 @@ import io
 import google.generativeai as genai
 import whisper
 
+import sounddevice as sd
+from scipy.io.wavfile import write
+
 
 from flask import Blueprint, render_template
 
@@ -48,5 +51,30 @@ def send_to_gemini(prompt:str, text: str):
     model = genai.GenerativeModel("gemini-1.5-flash-8b")
     response = model.generate_content(f"{prompt} \n \n {text}")
     return response.text
+
+
+
+
+def record_audio(filename="output.wav", duration=10, sample_rate=44100):
+    """
+    Records audio from the microphone and saves it to a WAV file.
+
+    Args:
+        filename (str): The name of the file to save the recording.
+        duration (int): Duration of the recording in seconds.
+        sample_rate (int): Sampling rate in Hz (default: 44100).
+    """
+    print("Recording... Speak into the microphone.")
+    try:
+        # Record audio
+        audio = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=1, dtype="int16")
+        sd.wait()  # Wait until recording is finished
+        print("Recording finished. Saving to file...")
+
+        # Save the audio to a WAV file
+        write(filename, sample_rate, audio)
+        print(f"Recording saved to {filename}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 

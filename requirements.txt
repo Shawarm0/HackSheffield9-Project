@@ -7,10 +7,16 @@ MarkupSafe
 Werkzeug
 
 python-dotenv
+# text to speech functions
+io 
+response
 
 # mongo requirements
 pymongo[srv]
 Flask-PyMongo
+#sound recording function
+sounddevice 
+scipy 
 
 #whisper
 git+https://github.com/openai/whisper.git
