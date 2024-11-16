@@ -1,40 +1,18 @@
-import io
-from flask import Blueprint, render_template, request, Response, url_for
-from gtts import gTTS
-from controllers.dyslexia.forms import DyslexiaForm
+from flask import Blueprint, render_template, request
+from controllers.utils import send_to_gemini, text_to_speech
+
 
 dyslexia_bp = Blueprint("dyslexia", __name__, template_folder="templates")
 
-
-def text_to_speech(text, lang="en"):
-    """Convert the input text to speech and return as an in-memory audio file."""
-    tts = gTTS(text=text, lang=lang, slow=False)
-    speech_buffer = io.BytesIO()
-    tts.save(speech_buffer)
-    speech_buffer.seek(0)
-    return speech_buffer
-
-
 @dyslexia_bp.route("/dyslexia", methods=["GET", "POST"])
 def dyslexia():
-    form = DyslexiaForm()
+    if request.method == "POST":
+        text = request.form.get("text")# Retrieve the text from the form
+        processed_text = send_to_gemini("Can you take the text below and create a big story from it as detailed as possible", f"{text}") 
 
-    if form.validate_on_submit():
-        text = form.big_text.data
-        speech_buffer = text_to_speech(text)
+        print(text)  # Print the text to the console
+        return processed_text  # Acknowledge the request
 
-        # Serve the generated audio file temporarily via a URL
-        audio_url = url_for("dyslexia.speak", _external=True)
-        return render_template("dyslexia/dyslexia.html", form=form, audio_url=audio_url)
+    # Default response for GET requests
+    return render_template("dyslexia/dyslexia.html")
 
-    return render_template("dyslexia/dyslexia.html", form=form)
-
-
-@dyslexia_bp.route("/dyslexia/speak", methods=["POST"])
-def speak():
-    text = request.form.get("text")
-    if not text:
-        return "No text provided", 400
-
-    speech_buffer = text_to_speech(text)
-    return Response(speech_buffer, mimetype="audio/mp3")
