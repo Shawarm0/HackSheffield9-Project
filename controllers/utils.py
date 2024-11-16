@@ -14,6 +14,12 @@ from flask import Blueprint, render_template
 import pyttsx3
 import io
 
+from pathlib import Path
+
+# Assuming media is the directory path
+media = Path("images") 
+
+
 def text_to_speech(text):
     # Initialize the speech engine
     engine = pyttsx3.init()
@@ -75,3 +81,15 @@ def record_audio(filename="output.wav", duration=10, sample_rate=44100):
         print(f"Recording saved to {filename}")
     except Exception as e:
         print(f"An error occurred: {e}")
+
+
+def image_to_gemini(file_name):
+    genai.configure(api_key="AIzaSyBK7p-x-WsOzMTWXEfEOoSeRF-CWZ98JGU")
+    myfile = genai.upload_file(media / file_name)
+
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    result = model.generate_content(
+    [myfile, "\n\n", "What is written in the picture?"]
+    )
+    return result.text
+    
