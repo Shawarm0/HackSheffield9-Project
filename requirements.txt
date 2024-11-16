@@ -19,6 +19,9 @@ Flask-PyMongo
 sounddevice 
 scipy 
 
+#for tts
+pyttestx3
+
 #whisper
 git+https://github.com/openai/whisper.git
 # openai-whisper

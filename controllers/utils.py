@@ -11,18 +11,23 @@ from scipy.io.wavfile import write
 
 
 from flask import Blueprint, render_template
+import pyttestx3
 import io
 
 
-def text_to_speech(text, lang="en"):
-    """Convert the input text to speech and return as an in-memory audio file."""
-    tts = gTTS(text=text, lang=lang, slow=False)
-    # Create an in-memory buffer to store the speech audio
-    speech_buffer = io.BytesIO()
-    tts.save(speech_buffer)
-    speech_buffer.seek(0)  # Move to the beginning of the buffer
-    return speech_buffer
+def text_to_speech(text):
+    # Initialize the speech engine
+    engine = pyttsx3.init()
 
+    # Set properties like rate (speed) and volume (0.0 to 1.0)
+    engine.setProperty('rate', 150)  # Speed of speech
+    engine.setProperty('volume', 1)  # Volume level (0.0 to 1.0)
+
+    # Convert the input text to speech
+    engine.say(text)
+
+    # Wait for the speech to finish
+    engine.runAndWait()
 
 def speak():
     """Receive text, convert it to speech, and return the audio file in-memory for playback."""
