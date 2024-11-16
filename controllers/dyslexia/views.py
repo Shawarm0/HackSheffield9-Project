@@ -15,7 +15,7 @@ def dyslexia():
 
         # Process the text
         processed_text = send_to_gemini(
-            "Can you take the text below and create a big story from it as detailed as possible",
+            "Can you get the text below and make it more concise and shorter, explain what it says to someone that may have dyslexia or other learning disabilities. Make sure that the return text has line breaks after each clearly explained point. DO NOT use any special characters other than punctuation",
             f"{text}"
         )
 
@@ -28,5 +28,4 @@ def dyslexia():
 
     # Render the default template for GET requests
     return render_template("dyslexia/dyslexia.html")
-
 
