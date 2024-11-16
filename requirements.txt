@@ -12,7 +12,13 @@ python-dotenv
 pymongo[srv]
 Flask-PyMongo
 
+#whisper
+git+https://github.com/openai/whisper.git
+ffmpeg
+tiktoken
 
+#gemini 
+-q -U google-generativeai
 
 # below not used yet
 # # Flask Functionality Packages
