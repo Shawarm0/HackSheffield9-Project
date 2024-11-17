@@ -10,7 +10,7 @@
         <div class="col-md-6">
             <div class="card shadow-lg">
                 <div class="card-body">
-                    <h5 class="card-title text-center text-secondary mb-3">Upload a picture of your handwritten text:</h5>
+                    <h5 class="card-title text-center text-secondary mb-3">Upload a picture of your handwriting.:</h5>
                     <form id="dyspraxia-form" method="POST" enctype="multipart/form-data">
                         <div class="form-group text-center">
                             <label for="file" class="font-weight-bold d-block mb-2">Choose a file to upload</label>
@@ -32,7 +32,7 @@
             <!-- Uploaded Image Preview -->
             <div class="card shadow-lg">
                 <div class="card-body text-center">
-                    <h5 class="text-secondary">This is your text:</h5>
+                    <h5 class="text-secondary">This is your handwriting:</h5>
                     <img id="uploaded-image" 
                          src="{{ url_for('static', filename='images/Figure.png') }}" 
                          alt="Uploaded Image" 
