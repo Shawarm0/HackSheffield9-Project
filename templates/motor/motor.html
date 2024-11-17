@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="game-area position-relative" style="width: 100%; height: 700px; border: 1px solid #ccc; margin: 0 auto; overflow: hidden; background-color: #f9f9f9;">
+    <div id="counter" class="position-absolute" style="top: 10px; left: 10px; font-size: 24px;">Score: 0</div>
+    <div id="timer" class="position-absolute" style="top: 10px; right: 10px; font-size: 24px;">Time: 5</div>
+</div>
+
+<div id="end-game" class="text-center mt-3" style="display: none;">
+    <p id="final-score" class="font-weight-bold d-inline"></p>
+    <button id="restart-button" class="btn btn-primary">Restart</button>
+</div>
+
+<script>
+    const gameArea = document.querySelector('.game-area');
+    const counter = document.getElementById('counter');
+    const timer = document.getElementById('timer');
+    const endGameDiv = document.getElementById('end-game');
+    const finalScoreText = document.getElementById('final-score');
+    const restartButton = document.getElementById('restart-button');
+
+    let score = 0;
+    let diameter = 5 * 37.795276; // 5cm to pixels (approx 1cm = 37.795276px)
+    let countdown = 5;
+    let interval;
+
+    // Create the circle element
+    const circle = document.createElement('div');
+    circle.id = 'circle';
+    circle.style.position = 'absolute';
+    circle.style.backgroundColor = 'red';
+    circle.style.borderRadius = '50%';
+    circle.style.cursor = 'pointer';
+    gameArea.appendChild(circle);
+
+    // Function to position circle randomly within the game area
+    function moveCircle() {
+        const maxX = gameArea.clientWidth - diameter;
+        const maxY = gameArea.clientHeight - diameter;
+
+        const randomX = Math.random() * maxX;
+        const randomY = Math.random() * maxY;
+
+        circle.style.width = `${diameter}px`;
+        circle.style.height = `${diameter}px`;
+        circle.style.left = `${randomX}px`;
+        circle.style.top = `${randomY}px`;
+    }
+
+    // Function to handle countdown
+    function startTimer() {
+        countdown = 5;
+        timer.textContent = `Time: ${countdown}`;
+        interval = setInterval(() => {
+            countdown--;
+            timer.textContent = `Time: ${countdown}`;
+            if (countdown === 0) {
+                endGame();
+            }
+        }, 1000);
+    }
+    // Function to end game
+    function endGame() {
+        clearInterval(interval);
+
+        // Hide the gameplay area
+        gameArea.style.display = 'none';
+
+        // Update the game over message and show the end game box
+        endGameDiv.innerHTML = `
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background-color: #f8d7da; color: #721c24; border: 2px solid #f5c6cb; border-radius: 10px; width: 80%; margin: 50px auto; text-align: center;">
+                <h1 style="font-size: 3rem; font-weight: bold; margin-bottom: 20px;">GAME OVER</h1>
+                <p style="font-size: 1.5rem; margin-bottom: 20px;">Well played: ${score}</p>
+                <button id="restartButton" style="font-size: 1.2rem; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Restart</button>
+            </div>
+        `;
+
+        endGameDiv.style.display = 'block';
+
+        // Add event listener to restart button dynamically
+        document.getElementById('restartButton').addEventListener('click', restartGame);
+    }
+
+    // Event listener for restart button functionality
+    function restartGame() {
+        // Reset game state
+        score = 0;
+        diameter = 5 * 37.795276;
+        counter.textContent = `Score: ${score}`;
+        endGameDiv.style.display = 'none';
+
+        // Show the gameplay area
+        gameArea.style.display = 'block';
+
+        // Restart game
+        moveCircle();
+        startTimer();
+    }
+
+    // Event listener for circle clicks
+    circle.addEventListener('click', (e) => {
+        clearInterval(interval);
+        score++;
+        counter.textContent = `Score: ${score}`;
+        diameter *= 0.95; // Reduce diameter by 5%
+        moveCircle();
+        startTimer();
+        e.stopPropagation(); // Prevent triggering the game-area click listener
+    });
+
+    // Event listener for clicks outside the circle
+    gameArea.addEventListener('click', (e) => {
+        if (e.target !== circle) {
+            endGame();
+        }
+    });
+
+    // Initialize the game
+    moveCircle();
+    startTimer();
+</script>
+{% endblock %}
+
