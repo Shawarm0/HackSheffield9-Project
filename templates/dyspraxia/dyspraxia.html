@@ -73,13 +73,11 @@
         }
 
         .btn-primary {
-            background-color: #f39c12;
-            border-color: #e67e22;
+            background-color: #28a745;
         }
 
         .btn-primary:hover {
-            background-color: #e67e22;
-            border-color: #f39c12;
+            background-color: #218838;
         }
 
         /* Green button */
@@ -103,6 +101,15 @@
             max-height: 300px;
         }
 
+    .dyspraxia-page::before {
+      content: "✍️";
+      position: absolute;
+      top: -20px;
+      left: -20px;
+      font-size: 2em;
+      color: #f39c12;
+      }
+
         /* Hide the default file input button */
         input[type="file"] {
             display: none;
@@ -121,9 +128,9 @@
                 <label for="file" class="font-weight-bold d-block mb-2">Choose a File to Upload</label>
                 <input type="file" id="file" name="file" class="form-control shadow-sm" required>
                 <!-- Custom Green Button -->
-                <label for="file" class="btn-green">Attach File</label>
+                <label for="file" class="btn-secondary btn-lg shadow">Attach File</label>
             </div>
-            <button type="submit" class="btn btn-primary btn-lg shadow mt-4 w-100">Upload</button>
+            <button type="submit" class="btn btn-primary btn-lg shadow mt-4 w-50">Upload</button>
         </form>
         <div id="status-message" class="mt-3 text-center"></div>
     </section>
