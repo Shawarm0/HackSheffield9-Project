@@ -28,11 +28,13 @@ def dyslexia():
         # Process the text
         processed_text = send_to_gemini(
             "Can you get the text below and make it more concise and shorter, explain what it says to someone that may have dyslexia or other learning disabilities. Make sure that the return text has line breaks after each clearly explained point. DO NOT use any special characters other than punctuation.",
-            f"{text}"
+            f"{text}",
         )
 
         # Start the text-to-speech process in a separate thread
-        tts_thread = threading.Thread(target=handle_text_to_speech, args=(processed_text,))
+        tts_thread = threading.Thread(
+            target=handle_text_to_speech, args=(processed_text,)
+        )
         tts_thread.start()
 
         # Return the processed text as JSON
@@ -47,4 +49,3 @@ def quit_tts():
     global stop_tts_flag
     stop_tts_flag.set()  # Signal the TTS process to stop
     return jsonify({"success": True})
-
