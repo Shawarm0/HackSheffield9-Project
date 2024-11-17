@@ -46,11 +46,18 @@
                     <input type="radio" name="answer" value="{{answer}}" id="answer-{{ loop.index }}">
                     {{ answer }}
                 </label>
+                <br>
             {% endfor %}
             <br>
             <button type="submit">Submit</button>
         </form>
 
+    </div>
+
+    <div>
+        <br>
+        <a id="send-to-chat-btn" href="#">Send to Chat</a>
+        <br>
     </div>
 
     <div>
@@ -65,6 +72,23 @@
 
         document.getElementById("new-idea-button").addEventListener("click", () => {
             window.location.href = "/dysgraphia";
+        });
+
+        document.getElementById('send-to-chat-btn').addEventListener('click', function(event) {
+            event.preventDefault();
+
+            const selectedOption = document.querySelector('input[name="answer"]:checked');
+
+            if (selectedOption) {
+                const questionValue = selectedOption.value;
+                const url = `{{ url_for('dysgraphia.send_to_chat') }}?question=${encodeURIComponent(questionValue)}`;
+
+                this.setAttribute('href', url);
+
+                window.location.href = url;
+            } else {
+                // alert('Please select an option before sending to chat.');
+            }
         });
 
     </script>

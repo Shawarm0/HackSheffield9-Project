@@ -48,7 +48,12 @@ def reload_answer():
     prompt = f"You will receive a text containing general ideas expressed by someone who may have dysgraphia. You are also gonna receive the last generated idea that the user felt that best matches their thoughts. Your task is to interpret the text and generate three main possible written ideas that the person intended to convey, ensuring that the responses are in the first person. Do not summarize their intentions; instead, if the person intended to ask a question, formulate the question as they might have. If they wanted to explain an idea, provide a clear explanation of that idea. The answers MUST STRICTLY follow this pattern: 'OUTPUT: first answer @ explanation of that answer $ OUTPUT: second answer @ explanation of that second answer $ OUTPUT: third answer @ explanation of that last one.' This is the last generated idea: {selected_answer}"
     output = send_to_gemini(prompt, text)
 
-    return render_template("dysgraphia/try_again.html", answers=output.split("$"))
+    final_answers = []
+    answers = output.split("$")
+    for answer in answers:
+        final_answers.append(answer.split("@")[0].replace("OUTPUT:", ""))
+
+    return render_template("dysgraphia/try_again.html", answers=final_answers)
 
 
 @dysgraphia_bp.route("/send-to-chat", methods=["GET", "POST"])
