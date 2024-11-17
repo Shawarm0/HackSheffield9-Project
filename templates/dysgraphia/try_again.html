@@ -1,161 +1,95 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h1 class="text-primary mb-1">Record Your Best Ideas and Questions!</h1>
+        <h2 class="text-secondary" style="font-size: 1.25rem; margin-top: -0.5rem;">Turn your thoughts into words.</h2>
+        <br>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Record Audio</title>
-    <style>
-        /* General styles */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 20px;
-            color: #333;
-        }
 
-        h1 {
-            text-align: center;
-            color: #007bff; /* Primary color for heading */
-            margin-bottom: 30px;
-        }
+        <span class="text-center mt-4" id="subtitle-options">Please select the idea that best aligns with what you intended to explain; the chosen option will be sent to the chat for a response, or the feature will regenerate options based on your selection.</span>
+        <div id="results-container" class="mt-4">
+            <form id="form" action="/reload_answer" method="POST">
+                {% for answer in answers %}
+                    <label>
+                        <input type="radio" name="answer" value="{{answer}}" id="answer-{{ loop.index }}">
+                        {{ answer }}
+                    </label>
+                    <br>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary mt-3">Regeneate Ideas</button>
+            </form>
+        </div>
+        
 
-        /* Container styles */
-        #results-container {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 0 auto;
-            max-width: 400px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+        <div class="text-center mt-4">
+            <a id="send-to-chat-btn" href="#" class="btn btn-primary btn-lg shadow">Send your idea/question to Chat</a>
+        </div>
 
-        /* Label and radio button styles */
-        label {
-            display: block;
-            margin-bottom: 10px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        input[type="radio"] {
-            margin-right: 10px;
-        }
-
-        /* Button styles */
-        button[type="submit"],
-        #new-idea-button {
-            background-color: #28a745; /* Success color */
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            font-size: 16px;
-        }
-
-        button[type="submit"]:hover,
-        #new-idea-button:hover {
-            background-color: #218838; /* Darker green */
-        }
-
-        /* Link styles */
-        a#send-to-chat-btn {
-            display: inline-block;
-            color: #007bff; /* Primary color for link */
-            text-decoration: none;
-            font-size: 16px;
-            margin-top: 15px;
-        }
-
-        a#send-to-chat-btn:hover {
-            text-decoration: underline;
-        }
-
-        /* Spinner styles */
-        #loading-spinner {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1000;
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #007bff; /* Match link color */
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            display: none;
-        }
-
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
-</head>
-<body>
-    <h1>Audio Recorder</h1>
-
-    <div id="results-container">
-        <form id="form" action="/reload_answer" method="POST">
-            {% for answer in answers %}
-                <label>
-                    <input type="radio" name="answer" value="{{answer}}" id="answer-{{ loop.index }}">
-                    {{ answer }}
-                </label>
-            {% endfor %}
-            <br>
-            <button type="submit">Try Again</button>
-        </form>
+        <div id="new-idea-div" class="text-center mt-4">
+            <button id="new-idea-button" class="btn btn-secondary btn-lg shadow">Start a New Idea</button>
+        </div>
     </div>
 
-    <div style="text-align: center;">
-        <br>
-        <a id="send-to-chat-btn" href="#">Send to Chat</a>
-        <br>
-    </div>
-
-    <div style="text-align: center;">
-        <br>
-        <button id="new-idea-button">Start a new idea!</button>
-    </div>
-
+    <!-- Spinner -->
+    <br><br><br>
     <div id="loading-spinner"></div>
+</div>
 
-    <script>
-        document.getElementById("new-idea-button").addEventListener("click", () => {
-            window.location.href = "/dysgraphia";
-        });
+<style>
+    
+    /* Spinner styles */
+    #loading-spinner {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+        width: 50px;
+        height: 50px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #007bff; /* Match link color */
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        display: none;
+    }
 
-        document.getElementById('send-to-chat-btn').addEventListener('click', function(event) {
-            event.preventDefault();
 
-            const selectedOption = document.querySelector('input[name="answer"]:checked');
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+</style>
 
-            if (selectedOption) {
-                const questionValue = selectedOption.value;
-                const url = `{{ url_for('dysgraphia.send_to_chat') }}?question=${encodeURIComponent(questionValue)}`;
 
-                this.setAttribute('href', url);
+<script>
+    document.getElementById("new-idea-button").addEventListener("click", () => {
+        window.location.href = "/dysgraphia";
+    });
 
-                window.location.href = url;
-            } else {
-                // alert('Please select an option before sending to chat.');
-            }
-        });
-    </script>
-</body>
+    document.getElementById('send-to-chat-btn').addEventListener('click', function(event) {
+        event.preventDefault();
+
+        const selectedOption = document.querySelector('input[name="answer"]:checked');
+
+        if (selectedOption) {
+            const questionValue = selectedOption.value;
+            const url = `{{ url_for('dysgraphia.send_to_chat') }}?question=${encodeURIComponent(questionValue)}`;
+
+            this.setAttribute('href', url);
+
+            window.location.href = url;
+        } else {
+            // alert('Please select an option before sending to chat.');
+        }
+    });
+</script>
+
 </html>
 
 {% endblock %}

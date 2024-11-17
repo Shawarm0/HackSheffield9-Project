@@ -7,8 +7,8 @@
         <h2 class="text-secondary" style="font-size: 1.25rem; margin-top: -0.5rem;">Turn your thoughts into words.</h2>
         <br>
         <div class="text-center">
-            <button id="record-btn" class="btn btn-success btn-lg shadow">Record</button>
-            <button id="stop-btn" class="btn btn-danger btn-lg shadow" disabled>Stop</button>
+            <button id="record-btn" class="btn btn-success btn-lg shadow">🎙️ Record</button>
+            <button id="stop-btn" class="btn btn-danger btn-lg shadow" disabled>⬜️ Stop</button>
         </div>
 
 
@@ -25,7 +25,7 @@
     </div>
 
     <!-- Spinner -->
-    <br>
+    <br><br><br>
     <div id="loading-spinner"></div>
 </div>
 
@@ -77,7 +77,7 @@
             formData.append("audio_data", audioBlob, "recorded_audio.wav");
 
             const spinner = document.getElementById("loading-spinner");
-            spinner.style.display = "block";
+            spinner.style.display = "inline-block";
 
             // Keep the "Record" button disabled
             document.getElementById("record-btn").disabled = true;
@@ -94,8 +94,8 @@
 
                 document.getElementById("record-btn").style.display = "none";
                 document.getElementById("stop-btn").style.display = "none";
-                document.getElementById("new-idea-div").style.display = "block";
-                document.getElementById("send-to-chat-btn").style.display = "block";
+                document.getElementById("new-idea-div").style.display = "inline-block";
+                document.getElementById("send-to-chat-btn").style.display = "inline-block";
                 document.getElementById("subtitle-options").style.display = "block";
 
                 const resultsContainer = document.getElementById("results-container");
