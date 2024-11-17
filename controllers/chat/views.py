@@ -21,7 +21,7 @@ def chat():
         previous_gemini_response = chat_history[-1]["gemini"] if chat_history else ""  # type: ignore
 
         # Prompt for Gemini including the user's latest message and Gemini's previous response
-        prompt = f"You will receive the use r's message and your previous response. Here is the user's message: {user_message}. Here is your previous response: {previous_gemini_response}. Please respond thoughtfully."
+        prompt = f"You will receive the use r's message and your previous response. Here is the user's message: {user_message}. Here is your previous response: {previous_gemini_response}. Please respond thoughtfully. Generate your response in markdown"
 
         # Send to Gemini and retrieve response
         gemini_response = send_to_gemini(prompt, user_message)

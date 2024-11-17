@@ -20,6 +20,9 @@ def allowed_file(filename):
 
 @dyspraxia_bp.route("/dyspraxia", methods=["GET", "POST"])
 def dyspraxia():
+    if os.path.exists("static/images/Figure.png"):
+        os.remove("static/images/Figure.png")
+
     if request.method == "POST":
         if "file" not in request.files:
             return jsonify({"message": "No file part"}), 400

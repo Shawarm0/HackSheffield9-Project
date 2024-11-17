@@ -1,134 +1,165 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1 style="text-align: center; font-family: Arial, sans-serif; color: #333;">Let's Chat!</h1>
+    <head>
+        <style>
+            /* General styling for the page */
+            .chat-page {
+                padding: 20px;
+                font-family: 'Comic Sans MS', 'Arial', sans-serif;
+                line-height: 1.8;
+                background-color: #fffbf3;
+            }
 
-    <!-- Embedded CSS Styles for Chat Layout -->
-    <style>
-        /* Chat layout */
-        .chat-container {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            font-family: Arial, sans-serif;
-        }
+            /* Main title styling */
+            .chat-title {
+                font-size: 3em;
+                color: #ffffff;
+                text-align: center;
+                font-weight: bold;
+                margin-bottom: 25px;
+                background: linear-gradient(to right, #f39c12, #e74c3c);
+                padding: 15px 30px;
+                border-radius: 15px;
+                box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            }
 
-        /* Chat history styling */
-        .chat-history {
-            height: 400px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            overflow-y: auto;
-            margin-bottom: 20px;
-            visibility: hidden; /* Hidden initially */
-        }
+            /* Chat container styling */
+            .chat-container {
+                max-width: 600px;
+                margin: 20px auto;
+                padding: 20px;
+                background-color: #ffffff;
+                border-radius: 12px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                font-family: Arial, sans-serif;
+            }
 
-        /* Message containers */
-        .message-container {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 15px;
-        }
+            /* Chat history styling */
+            .chat-history {
+                height: 400px;
+                padding: 15px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                background-color: #f9f9f9;
+                overflow-y: auto;
+                margin-bottom: 20px;
+            }
 
-        .user-container {
-            justify-content: flex-end;
-        }
+            /* Message containers */
+            .message-container {
+                display: flex;
+                align-items: flex-start;
+                margin-bottom: 15px;
+            }
 
-        .gemini-container {
-            justify-content: flex-start;
-        }
+            .user-container {
+                justify-content: flex-end;
+            }
 
-        /* Individual messages */
-        .message {
-            max-width: 70%;
-            padding: 12px 18px;
-            border-radius: 18px;
-            font-size: 15px;
-            line-height: 1.6;
-            box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
-        }
+            .gemini-container {
+                justify-content: flex-start;
+            }
 
-        /* Gemini message styling */
-        .gemini-message {
-            background-color: #e0d4f5;
-            color: #5b2a8f;
-            text-align: left;
-            border-radius: 18px 18px 18px 0;
-        }
+            /* Individual messages */
+            .message {
+                max-width: 70%;
+                padding: 12px 18px;
+                border-radius: 18px;
+                font-size: 15px;
+                line-height: 1.6;
+                box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+            }
 
-        /* User message styling */
-        .user-message {
-            background-color: #cceeff;
-            color: #035b8f;
-            text-align: left;
-            border-radius: 18px 18px 0 18px;
-        }
+            /* Gemini message styling */
+            .gemini-message {
+                background-color: #e0d4f5;
+                color: #5b2a8f;
+                text-align: left;
+                border-radius: 18px 18px 18px 0;
+            }
 
-        /* Chat input form styling */
-        .chat-form {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+            /* User message styling */
+            .user-message {
+                background-color: #cceeff;
+                color: #035b8f;
+                text-align: left;
+                border-radius: 18px 18px 0 18px;
+            }
 
-        .chat-input {
-            width: 80%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-        }
+            /* Chat input form styling */
+            .chat-form {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
 
-        .chat-submit {
-            background-color: #4a148c;
-            color: #fff;
-            padding: 10px 20px;
-            font-size: 14px;
-            font-weight: bold;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+            .chat-input {
+                width: 80%;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                font-size: 14px;
+            }
 
-        .chat-submit:hover {
-            background-color: #6a1b9a;
-        }
-    </style>
+            .chat-submit {
+                background-color: #4a148c;
+                color: #fff;
+                padding: 10px 20px;
+                font-size: 14px;
+                font-weight: bold;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
 
-    <!-- Chat Container -->
-    <div class="chat-container">
-        <!-- Chat History Container -->
-        <div class="chat-history" id="chatHistory">
-            {% for entry in chat_history %}
-                <!-- User Message Container (Right-aligned) -->
-                <div class="message-container user-container">
-                    <div class="message user-message">
-                        <strong>User:</strong> {{ entry.get('user', '')|safe }}
+            .chat-submit:hover {
+                background-color: #6a1b9a;
+            }
+
+            /* Decorative icon for the chat section */
+            .chat-container::before {
+                content: "💬";
+                position: absolute;
+                top: -20px;
+                left: -20px;
+                font-size: 2em;
+                color: #f39c12;
+            }
+        </style>
+    </head>
+    <div class="chat-page">
+        <h1 class="chat-title">Chat with Gemini</h1>
+
+        <div class="chat-container">
+            <!-- Chat History Container -->
+            <div class="chat-history" id="chatHistory">
+                {% for entry in chat_history %}
+                    <!-- User Message Container (Right-aligned) -->
+                    <div class="message-container user-container">
+                        <div class="message user-message">
+                            <strong>User:</strong> {{ entry.get('user', '') | safe }}
+                        </div>
                     </div>
-                </div>
-                
-                <!-- Gemini Message Container (Left-aligned) -->
-                <div class="message-container gemini-container">
-                    <div class="message gemini-message">
-                        <strong>Gemini:</strong> {{ entry.get('gemini', '')|safe }}
+
+                    <!-- Gemini Message Container (Left-aligned) -->
+                    <div class="message-container gemini-container">
+                        <div class="message gemini-message">
+                            <strong>Gemini:</strong> {{ entry.get('gemini', '') | safe }}
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
+
+            <!-- Chat Input Form -->
+            <form method="post" class="chat-form">
+                {{ form.hidden_tag() }}
+                {{ form.user_input(size=40, class="chat-input", placeholder="Type your message here...") }}
+                {{ form.submit(class="chat-submit") }}
+                <input type="hidden" name="previous_gemini_response" value="{{ chat_history[-1]['gemini'] if chat_history else '' }}">
+            </form>
         </div>
-
-        <!-- Chat Input Form -->
-        <form method="post" class="chat-form">
-            {{ form.hidden_tag() }}
-            {{ form.user_input(size=40, class="chat-input", placeholder="Type your message here...") }}
-            {{ form.submit(class="chat-submit") }}
-            <input type="hidden" name="previous_gemini_response" value="{{ chat_history[-1]['gemini'] if chat_history else '' }}">
-        </form>
     </div>
 
     <!-- JavaScript to display chat history if messages exist -->
@@ -142,3 +173,4 @@
         });
     </script>
 {% endblock %}
+
