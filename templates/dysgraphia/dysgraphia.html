@@ -3,16 +3,20 @@
 {% block content %}
 <div class="container mt-5">
     <div class="card shadow-lg p-4">
-        <h2 class="text-center text-primary mb-4">Audio Recorder</h2>
+        <h1 class="text-primary mb-1">Record Your Best Ideas and Questions!</h1>
+        <h2 class="text-secondary" style="font-size: 1.25rem; margin-top: -0.5rem;">Turn your thoughts into words.</h2>
+        <br>
         <div class="text-center">
             <button id="record-btn" class="btn btn-success btn-lg shadow">Record</button>
             <button id="stop-btn" class="btn btn-danger btn-lg shadow" disabled>Stop</button>
         </div>
 
+
+        <span class="text-center mt-4" id="subtitle-options">Please select the idea that best aligns with what you intended to explain; the chosen option will be sent to the chat for a response, or the feature will regenerate options based on your selection.</span>
         <div id="results-container" class="mt-4"></div>
 
         <div class="text-center mt-4">
-            <a id="send-to-chat-btn" href="#" class="btn btn-primary btn-lg shadow" style="display: none;">Send to Chat</a>
+            <a id="send-to-chat-btn" href="#" class="btn btn-primary btn-lg shadow" style="display: none;">Send your idea/question to Chat</a>
         </div>
 
         <div id="new-idea-div" class="text-center mt-4" style="display: none;">
@@ -21,6 +25,7 @@
     </div>
 
     <!-- Spinner -->
+    <br>
     <div id="loading-spinner"></div>
 </div>
 
@@ -37,6 +42,10 @@
         border-top: 5px solid #3498db;
         border-radius: 50%;
         animation: spin 1s linear infinite;
+        display: none;
+    }
+
+    #subtitle-options {
         display: none;
     }
 
@@ -87,6 +96,7 @@
                 document.getElementById("stop-btn").style.display = "none";
                 document.getElementById("new-idea-div").style.display = "block";
                 document.getElementById("send-to-chat-btn").style.display = "block";
+                document.getElementById("subtitle-options").style.display = "block";
 
                 const resultsContainer = document.getElementById("results-container");
                 resultsContainer.innerHTML = "";
@@ -107,7 +117,7 @@
                 });
 
                 const submitButton = document.createElement("button");
-                submitButton.textContent = "Try Again";
+                submitButton.textContent = "Regenerate Ideas";
                 submitButton.type = "submit";
                 submitButton.classList.add("btn", "btn-primary", "mt-3");
                 form.appendChild(submitButton);

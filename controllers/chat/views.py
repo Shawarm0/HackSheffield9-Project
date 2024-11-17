@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify
 from .forms import ChatForm
 from controllers.utils import send_to_gemini
+from markdown import markdown
 
 chat_bp = Blueprint("chat", __name__, template_folder="templates")
 
@@ -26,6 +27,6 @@ def chat():
         gemini_response = send_to_gemini(prompt, user_message)
 
         # Append responses to chat history
-        chat_history.append({"user": user_message, "gemini": gemini_response})  # type: ignore
+        chat_history.append({"user": markdown(user_message), "gemini": markdown(gemini_response)})  # type: ignore
 
     return render_template("chat/chat.html", form=form, chat_history=chat_history)

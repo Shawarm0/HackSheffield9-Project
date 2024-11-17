@@ -3,17 +3,17 @@
 {% block content %}
 <div class="container mt-5">
     <!-- Page Header -->
-    <h2 class="text-center text-primary mb-4">File Upload for Dyspraxia Support</h2>
+    <h2 class="text-center text-primary mb-4">Let's Understand Your Handwriting!</h2>
 
     <!-- File Upload Section -->
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow-lg">
                 <div class="card-body">
-                    <h5 class="card-title text-center text-secondary mb-3">Upload Your File</h5>
+                    <h5 class="card-title text-center text-secondary mb-3">Upload a picture of your handwritten text:</h5>
                     <form id="dyspraxia-form" method="POST" enctype="multipart/form-data">
                         <div class="form-group text-center">
-                            <label for="file" class="font-weight-bold d-block mb-2">Choose a file to upload:</label>
+                            <label for="file" class="font-weight-bold d-block mb-2">Choose a file to upload</label>
                             <div class="d-flex justify-content-center">
                                 <input type="file" id="file" name="file" class="form-control w-75 shadow-sm" required>
                             </div>
@@ -32,7 +32,7 @@
             <!-- Uploaded Image Preview -->
             <div class="card shadow-lg">
                 <div class="card-body text-center">
-                    <h5 class="text-secondary">Uploaded Image Preview</h5>
+                    <h5 class="text-secondary">This is your text:</h5>
                     <img id="uploaded-image" 
                          src="{{ url_for('static', filename='images/Figure.png') }}" 
                          alt="Uploaded Image" 
@@ -43,7 +43,7 @@
             <!-- Processed Text Output -->
             <div class="card shadow-lg mt-4">
                 <div class="card-body">
-                    <h5 class="text-secondary">Processed Text</h5>
+                    <h5 class="text-secondary">And this is what is written in that:</h5>
                     <textarea id="output" 
                               class="form-control shadow-sm mt-3" 
                               rows="10" 

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1 style="text-align: center; font-family: Arial, sans-serif; color: #333;">Chat with Gemini</h1>
+    <h1 style="text-align: center; font-family: Arial, sans-serif; color: #333;">Let's Chat!</h1>
 
     <!-- Embedded CSS Styles for Chat Layout -->
     <style>
@@ -109,14 +109,14 @@
                 <!-- User Message Container (Right-aligned) -->
                 <div class="message-container user-container">
                     <div class="message user-message">
-                        <strong>User:</strong> {{ entry.get('user', '') }}
+                        <strong>User:</strong> {{ entry.get('user', '')|safe }}
                     </div>
                 </div>
                 
                 <!-- Gemini Message Container (Left-aligned) -->
                 <div class="message-container gemini-container">
                     <div class="message gemini-message">
-                        <strong>Gemini:</strong> {{ entry.get('gemini', '') }}
+                        <strong>Gemini:</strong> {{ entry.get('gemini', '')|safe }}
                     </div>
                 </div>
             {% endfor %}
