@@ -12,6 +12,10 @@
         #new-idea-div{
             display: none;
         }
+
+        #send-to-chat-btn{
+            display: none;
+        }
             
         /* Spinner styles */
         #loading-spinner {
@@ -45,6 +49,12 @@
     <button id="stop-btn" disabled>Stop</button>
 
     <div id="results-container"></div>
+
+    <div>
+        <br>
+        <a id="send-to-chat-btn" href="#">Send to Chat</a>
+        <br>
+    </div>
 
     <div id="new-idea-div">
         <br>
@@ -87,6 +97,7 @@
                 document.getElementById("stop-btn").style.display = "none";
 
                 document.getElementById("new-idea-div").style.display = "block";
+                document.getElementById("send-to-chat-btn").style.display = "block";
                 
                 spinner.style.display = "none";
                 document.getElementById("record-btn").disabled = false;
@@ -135,6 +146,25 @@
         document.getElementById("new-idea-button").addEventListener("click", () => {
             location.reload();
         });
+    
+
+        document.getElementById('send-to-chat-btn').addEventListener('click', function(event) {
+            event.preventDefault();
+
+            const selectedOption = document.querySelector('input[name="answer"]:checked');
+
+            if (selectedOption) {
+                const questionValue = selectedOption.value;
+                const url = `{{ url_for('dysgraphia.send_to_chat') }}?question=${encodeURIComponent(questionValue)}`;
+
+                this.setAttribute('href', url);
+
+                window.location.href = url;
+            } else {
+                // alert('Please select an option before sending to chat.');
+            }
+        });
+        
 
     </script>
 </body>
