@@ -1,87 +1,134 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Chat</h1>
+    <h1 style="text-align: center; font-family: Arial, sans-serif; color: #333;">Chat with Gemini</h1>
 
     <!-- Embedded CSS Styles for Chat Layout -->
     <style>
-        /* Overall chat history container */
-        .chat-history {
+        /* Chat layout */
+        .chat-container {
             max-width: 600px;
-            height: 400px; /* Fixed height for scrollable container */
-            margin: 0 auto;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-family: Arial, sans-serif;
+        }
+
+        /* Chat history styling */
+        .chat-history {
+            height: 400px;
             padding: 15px;
             border: 1px solid #ddd;
             border-radius: 8px;
             background-color: #f9f9f9;
-            overflow-y: auto; /* Enable vertical scrolling */
-            visibility: hidden; /* Hide initially */
+            overflow-y: auto;
+            margin-bottom: 20px;
+            visibility: hidden; /* Hidden initially */
         }
 
-        /* Message container styling */
+        /* Message containers */
         .message-container {
             display: flex;
+            align-items: flex-start;
             margin-bottom: 15px;
-        }
-
-        .gemini-container {
-            justify-content: flex-start;
         }
 
         .user-container {
             justify-content: flex-end;
         }
 
-        /* Individual message styling */
+        .gemini-container {
+            justify-content: flex-start;
+        }
+
+        /* Individual messages */
         .message {
             max-width: 70%;
-            padding: 10px 15px;
-            border-radius: 12px;
-            font-size: 14px;
-            line-height: 1.4;
+            padding: 12px 18px;
+            border-radius: 18px;
+            font-size: 15px;
+            line-height: 1.6;
+            box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
         }
 
-        /* Gemini message styling (aligned to the left) */
+        /* Gemini message styling */
         .gemini-message {
-            background-color: #f3e5f5;
-            color: #6a1b9a;
+            background-color: #e0d4f5;
+            color: #5b2a8f;
             text-align: left;
+            border-radius: 18px 18px 18px 0;
         }
 
-        /* User message styling (aligned to the right) */
+        /* User message styling */
         .user-message {
-            background-color: #e1f5fe;
-            color: #0277bd;
+            background-color: #cceeff;
+            color: #035b8f;
             text-align: left;
+            border-radius: 18px 18px 0 18px;
+        }
+
+        /* Chat input form styling */
+        .chat-form {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-input {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .chat-submit {
+            background-color: #4a148c;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .chat-submit:hover {
+            background-color: #6a1b9a;
         }
     </style>
 
-    <!-- Chat Input Form -->
-    <form method="post" style="margin-bottom: 20px;">
-        {{ form.hidden_tag() }}
-        {{ form.user_input.label }}<br>
-        {{ form.user_input(size=40) }}<br><br>
-        {{ form.submit() }}
-        <input type="hidden" name="previous_gemini_response" value="{{ chat_history[-1]['gemini'] if chat_history else '' }}">
-    </form>
+    <!-- Chat Container -->
+    <div class="chat-container">
+        <!-- Chat History Container -->
+        <div class="chat-history" id="chatHistory">
+            {% for entry in chat_history %}
+                <!-- User Message Container (Right-aligned) -->
+                <div class="message-container user-container">
+                    <div class="message user-message">
+                        <strong>User:</strong> {{ entry.get('user', '') }}
+                    </div>
+                </div>
+                
+                <!-- Gemini Message Container (Left-aligned) -->
+                <div class="message-container gemini-container">
+                    <div class="message gemini-message">
+                        <strong>Gemini:</strong> {{ entry.get('gemini', '') }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
 
-    <!-- Scrollable Chat History Container -->
-    <div class="chat-history" id="chatHistory">
-        {% for entry in chat_history %}
-            <!-- User Message Container (Right-aligned) -->
-            <div class="message-container user-container">
-                <div class="message user-message">
-                    <strong>User:</strong> {{ entry.get('user', '') }}
-                </div>
-            </div>
-            
-            <!-- Gemini Message Container (Left-aligned) -->
-            <div class="message-container gemini-container">
-                <div class="message gemini-message">
-                    <strong>Gemini:</strong> {{ entry.get('gemini', '') }}
-                </div>
-            </div>
-        {% endfor %}
+        <!-- Chat Input Form -->
+        <form method="post" class="chat-form">
+            {{ form.hidden_tag() }}
+            {{ form.user_input(size=40, class="chat-input", placeholder="Type your message here...") }}
+            {{ form.submit(class="chat-submit") }}
+            <input type="hidden" name="previous_gemini_response" value="{{ chat_history[-1]['gemini'] if chat_history else '' }}">
+        </form>
     </div>
 
     <!-- JavaScript to display chat history if messages exist -->
