@@ -2,26 +2,31 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="text-center">Autism Text Reformulator</h2>
-    <form id="autism-form" method="POST">
-        <div class="row">
-            <!-- Input Box -->
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="text">Enter your text:</label>
-                    <textarea id="text" name="text" class="form-control" rows="10" placeholder="Type text here..."></textarea>
+    <!-- Main Content -->
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center text-primary mb-4">ASD Text Reformulator</h2>
+        <form id="autism-form" method="POST">
+            <div class="row">
+                <!-- Input Box -->
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label for="text" class="font-weight-bold">Enter Your Text:</label>
+                        <textarea id="text" name="text" class="form-control shadow-sm" rows="10" placeholder="Type text here..."></textarea>
+                    </div>
+                </div>
+                <!-- Output Box -->
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label for="output" class="font-weight-bold">Reformulated Text:</label>
+                        <textarea id="output" class="form-control shadow-sm" rows="10" readonly placeholder="Reformulated text will appear here..."></textarea>
+                    </div>
                 </div>
             </div>
-            <!-- Output Box -->
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="output">Reformulated Text:</label>
-                    <textarea id="output" class="form-control" rows="10" readonly placeholder="Reformulated text will appear here..."></textarea>
-                </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg shadow">Submit</button>
             </div>
-        </div>
-        <button type="submit" class="btn btn-primary mt-3">Submit</button>
-    </form>
+        </form>
+    </div>
 </div>
 
 <script>

@@ -1,6 +1,114 @@
-{% extends "base.html"%}
+{% extends "base.html" %}
 
-{%block content%}
-    <h1>Home Page</h1>
-    <p>Welcome to the home page</p>
-{%endblock%}
+{% block content %}
+    <head>
+        <style>
+            .home-page {
+                padding: 20px;
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+            }
+
+            .main-title {
+                font-size: 2.5em;
+                color: #333;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+
+            .welcome-text {
+                text-align: center;
+                color: #555;
+                font-size: 1.2em;
+                margin-bottom: 30px;
+            }
+
+            .features-section {
+                max-width: 800px;
+                margin: 0 auto;
+            }
+
+            .section-title {
+                font-size: 2em;
+                color: #444;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+
+            .feature {
+                background: #f9f9f9;
+                padding: 15px;
+                margin-bottom: 20px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .feature-title {
+                font-size: 1.5em;
+                color: #222;
+                margin-bottom: 10px;
+            }
+
+            .feature-description {
+                font-size: 1em;
+                color: #555;
+                margin: 0;
+            }
+        </style>
+    </head>
+    <div class="home-page">
+        <h1 class="main-title">Home Page</h1>
+        <p class="welcome-text">Welcome to the home page</p>
+
+        <section class="features-section">
+            <h2 class="section-title">Accessibility Features</h2>
+
+            <div class="feature" id="dysgraphia">
+                <h3 class="feature-title">Dysgraphia</h3>
+                <p class="feature-description">
+                    Easily transform your spoken thoughts into written ideas. The feature listens to your speech, simplifies it, and offers three 
+                    potential prompts that align with your intended meaning. Choose the most fitting option, or request the model to refine your 
+                    ideas further. Once satisfied, seamlessly send the output into the chat.
+                </p>
+            </div>
+
+            <div class="feature" id="dyslexia">
+                <h3 class="feature-title">Dyslexia</h3>
+                <p class="feature-description">
+                    Enhance reading accessibility with text-to-speech conversion. This feature reads text aloud while also presenting a simplified 
+                    version for easier understanding, helping you grasp the core message without unnecessary complexity.
+                </p>
+            </div>
+
+            <div class="feature" id="dyspraxia">
+                <h3 class="feature-title">Dyspraxia</h3>
+                <p class="feature-description">
+                    Turn your handwriting into editable text effortlessly. Upload an image of your handwritten notes, and the feature will 
+                    accurately interpret and convert it into clear, digital text, ready for further use or sharing.
+                </p>
+            </div>
+
+            <div class="feature" id="dyscalculia">
+                <h3 class="feature-title">Dyscalculia</h3>
+                <p class="feature-description">Coming soon: Tools and features to assist with numerical understanding and calculations.</p>
+            </div>
+
+            <div class="feature" id="autism">
+                <h3 class="feature-title">Autism</h3>
+                <p class="feature-description">
+                    Simplify communication with a chat assistant designed for clarity. It translates complex language, such as slang or idioms, 
+                    into straightforward expressions, making conversations more accessible and easier to understand.
+                </p>
+            </div>
+
+            <div class="feature" id="ai-chat">
+                <h3 class="feature-title">AI Chat</h3>
+                <p class="feature-description">
+                    Engage with a versatile AI assistant for all your queries and needs. Whether you're seeking information, advice, or creative 
+                    ideas, this general-purpose chat is here to help in a natural and intuitive way.
+                </p>
+            </div>
+        </section>
+    </div>
+{% endblock %}
