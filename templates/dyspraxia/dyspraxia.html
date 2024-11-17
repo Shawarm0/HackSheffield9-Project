@@ -82,8 +82,30 @@
             border-color: #f39c12;
         }
 
+        /* Green button */
+        .btn-green {
+            background-color: #2ecc71;
+            border-color: #27ae60;
+            color: white;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .btn-green:hover {
+            background-color: #27ae60;
+            border-color: #2ecc71;
+        }
+
         .img-fluid {
             max-height: 300px;
+        }
+
+        /* Hide the default file input button */
+        input[type="file"] {
+            display: none;
         }
     </style>
 </head>
@@ -98,6 +120,8 @@
             <div class="form-group text-center">
                 <label for="file" class="font-weight-bold d-block mb-2">Choose a File to Upload</label>
                 <input type="file" id="file" name="file" class="form-control shadow-sm" required>
+                <!-- Custom Green Button -->
+                <label for="file" class="btn-green">Attach File</label>
             </div>
             <button type="submit" class="btn btn-primary btn-lg shadow mt-4 w-100">Upload</button>
         </form>
