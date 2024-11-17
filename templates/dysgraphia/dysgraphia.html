@@ -1,34 +1,48 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container mt-5" style="font-family: 'Comic Sans MS', 'Comic Sans', cursive;">
+    <!-- Main Content Card -->
     <div class="card shadow-lg p-4">
-        <h1 class="text-primary mb-1">Record Your Best Ideas and Questions!</h1>
-        <h2 class="text-secondary" style="font-size: 1.25rem; margin-top: -0.5rem;">Turn your thoughts into words.</h2>
-        <br>
-        <div class="text-center">
-            <button id="record-btn" class="btn btn-success btn-lg shadow">🎙️ Record</button>
-            <button id="stop-btn" class="btn btn-danger btn-lg shadow" disabled>⬜️ Stop</button>
+        <!-- Header Section -->
+        <div class="text-center mb-4">
+            <h1 class="text-white py-3" 
+                style="background: linear-gradient(90deg, #f39c12, #e74c3c); 
+                       border-radius: 8px; 
+                       color: #fff; 
+                       font-weight: bold;
+                       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);">
+                Record Your Best Ideas and Questions!
+            </h1>
+            <h2 class="text-secondary" style="font-size: 1.5rem;">Turn your thoughts into words.</h2>
         </div>
 
+        <!-- Button Section -->
+        <div class="text-center mb-4">
+            <button id="record-btn" class="btn btn-success btn-lg shadow" style="font-weight: bold;">🎙️ Start Recording</button>
+            <button id="stop-btn" class="btn btn-danger btn-lg shadow" disabled style="font-weight: bold;">⏹ Stop</button>
+        </div>
 
-        <span class="text-center mt-4" id="subtitle-options">Please select the idea that best aligns with what you intended to explain; the chosen option will be sent to the chat for a response, or the feature will regenerate options based on your selection.</span>
+        <!-- Subtitle and Results -->
+        <div class="text-center mt-4" id="subtitle-options" style="display: none;">
+            <p class="text-secondary" style="font-size: 1.2rem;">Please select the idea that best aligns with what you intended to explain; the chosen option will be sent to the chat for a response, or the feature will regenerate options based on your selection.</p>
+        </div>
         <div id="results-container" class="mt-4"></div>
 
+        <!-- Action Buttons -->
         <div class="text-center mt-4">
-            <a id="send-to-chat-btn" href="#" class="btn btn-primary btn-lg shadow" style="display: none;">Send your idea/question to Chat</a>
+            <a id="send-to-chat-btn" href="#" class="btn btn-secondary btn-lg shadow" style="display: none; font-weight: bold;">Send your idea/question to Chat</a>
         </div>
-
         <div id="new-idea-div" class="text-center mt-4" style="display: none;">
-            <button id="new-idea-button" class="btn btn-secondary btn-lg shadow">Start a New Idea</button>
+            <button id="new-idea-button" class="btn btn-success btn-lg shadow" style="font-weight: bold;">Start a New Idea</button>
         </div>
     </div>
 
     <!-- Spinner -->
-    <br><br><br>
-    <div id="loading-spinner"></div>
+    <div id="loading-spinner" style="display: none;"></div>
 </div>
 
+<!-- Spinner Styling -->
 <style>
     #loading-spinner {
         position: fixed;
@@ -42,11 +56,30 @@
         border-top: 5px solid #3498db;
         border-radius: 50%;
         animation: spin 1s linear infinite;
-        display: none;
     }
 
     #subtitle-options {
         display: none;
+    }
+
+    .card-option:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card-option{
+        background-color: #feead055;
+    }
+
+    .btn-secondary {
+        background-color: grey;
+        border-color: grey;
+    }
+
+    .btn-success {
+        background-color: green;
+        border-color: green;
     }
 
     @keyframes spin {
@@ -59,105 +92,115 @@
     }
 </style>
 
+<!-- JavaScript Section -->
 <script>
     let mediaRecorder;
     let audioChunks = [];
 
     document.getElementById("record-btn").addEventListener("click", async () => {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream);
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder = new MediaRecorder(stream);
 
-        mediaRecorder.ondataavailable = (event) => {
-            audioChunks.push(event.data);
-        };
+    mediaRecorder.ondataavailable = (event) => {
+        audioChunks.push(event.data);
+    };
 
-        mediaRecorder.onstop = async () => {
-            const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
-            const formData = new FormData();
-            formData.append("audio_data", audioBlob, "recorded_audio.wav");
+    mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+        const formData = new FormData();
+        formData.append("audio_data", audioBlob, "recorded_audio.wav");
 
-            const spinner = document.getElementById("loading-spinner");
-            spinner.style.display = "inline-block";
+        const spinner = document.getElementById("loading-spinner");
+        spinner.style.display = "inline-block";
 
-            // Keep the "Record" button disabled
-            document.getElementById("record-btn").disabled = true;
+        document.getElementById("record-btn").disabled = true;
 
-            // Send the audio to the server
-            try {
-                const response = await fetch("/upload_audio", {
-                    method: "POST",
-                    body: formData,
-                });
+        try {
+            const response = await fetch("/upload_audio", {
+                method: "POST",
+                body: formData,
+            });
 
-                const result = await response.json();
-                spinner.style.display = "none";
+            const result = await response.json();
+            spinner.style.display = "none";
 
-                document.getElementById("record-btn").style.display = "none";
-                document.getElementById("stop-btn").style.display = "none";
-                document.getElementById("new-idea-div").style.display = "inline-block";
-                document.getElementById("send-to-chat-btn").style.display = "inline-block";
-                document.getElementById("subtitle-options").style.display = "block";
+            document.getElementById("record-btn").style.display = "none";
+            document.getElementById("stop-btn").style.display = "none";
+            document.getElementById("new-idea-div").style.display = "inline-block";
+            document.getElementById("send-to-chat-btn").style.display = "inline-block";
+            document.getElementById("subtitle-options").style.display = "block";
 
-                const resultsContainer = document.getElementById("results-container");
-                resultsContainer.innerHTML = "";
+            const resultsContainer = document.getElementById("results-container");
+            resultsContainer.innerHTML = "";
 
-                const form = document.createElement("form");
-                form.action = "/reload_answer";
-                result.answers.forEach((answer, index) => {
-                    const label = document.createElement("label");
-                    const radio = document.createElement("input");
-                    radio.type = "radio";
-                    radio.name = "answer";
-                    radio.value = answer;
-                    radio.id = `answer-${index}`;
-                    label.appendChild(radio);
-                    label.appendChild(document.createTextNode(answer));
-                    form.appendChild(label);
-                    form.appendChild(document.createElement("br"));
-                });
+            const form = document.createElement("form");
+            form.action = "/reload_answer";
+            result.answers.forEach((answer, index) => {
+                const card = document.createElement("div");
+                card.classList.add("card-option", "mb-3", "card");
 
-                const submitButton = document.createElement("button");
-                submitButton.textContent = "Regenerate Ideas";
-                submitButton.type = "submit";
-                submitButton.classList.add("btn", "btn-primary", "mt-3");
-                form.appendChild(submitButton);
+                const cardBody = document.createElement("div");
+                cardBody.classList.add("card-body");
 
-                resultsContainer.appendChild(form);
-            } catch (error) {
-                console.error("Error processing audio:", error);
-                spinner.style.display = "none";
-                alert("An error occurred while processing the audio. Please try again.");
-            } finally {
-                // Re-enable the "Record" button after completion
-                document.getElementById("record-btn").disabled = false;
-            }
-        };
+                const label = document.createElement("label");
+                label.classList.add("d-flex", "align-items-center");
 
-        mediaRecorder.start();
-        document.getElementById("record-btn").disabled = true; // Disable while recording
-        document.getElementById("stop-btn").disabled = false;
-    });
+                const radio = document.createElement("input");
+                radio.type = "radio";
+                radio.name = "answer";
+                radio.value = answer;
+                radio.id = `answer-${index}`;
+                radio.classList.add("mr-2");
 
-    document.getElementById("stop-btn").addEventListener("click", () => {
-        mediaRecorder.stop();
-        document.getElementById("stop-btn").disabled = true; // Disable "Stop" button
-        audioChunks = []; // Clear chunks for the next recording
-    });
+                label.appendChild(radio);
+                label.appendChild(document.createTextNode(answer));
 
-    document.getElementById("new-idea-button").addEventListener("click", () => {
-        location.reload();
-    });
+                cardBody.appendChild(label);
+                card.appendChild(cardBody);
+                form.appendChild(card);
+            });
 
-    document.getElementById("send-to-chat-btn").addEventListener("click", function (event) {
-        event.preventDefault();
-        const selectedOption = document.querySelector('input[name="answer"]:checked');
-        if (selectedOption) {
-            const questionValue = selectedOption.value;
-            const url = `{{ url_for('dysgraphia.send_to_chat') }}?question=${encodeURIComponent(questionValue)}`;
-            this.setAttribute("href", url);
-            window.location.href = url;
+            const submitButton = document.createElement("button");
+            submitButton.textContent = "Regenerate Ideas";
+            submitButton.type = "submit";
+            submitButton.classList.add("btn", "btn-secondary", "mt-3");
+            form.appendChild(submitButton);
+
+            resultsContainer.appendChild(form);
+        } catch (error) {
+            console.error("Error processing audio:", error);
+            spinner.style.display = "none";
+            alert("An error occurred while processing the audio. Please try again.");
+        } finally {
+            document.getElementById("record-btn").disabled = false;
         }
-    });
-</script>
+    };
 
+    mediaRecorder.start();
+    document.getElementById("record-btn").disabled = true;
+    document.getElementById("stop-btn").disabled = false;
+});
+
+document.getElementById("stop-btn").addEventListener("click", () => {
+    mediaRecorder.stop();
+    document.getElementById("stop-btn").disabled = true;
+    audioChunks = [];
+});
+
+document.getElementById("new-idea-button").addEventListener("click", () => {
+    location.reload();
+});
+
+document.getElementById("send-to-chat-btn").addEventListener("click", function (event) {
+    event.preventDefault();
+    const selectedOption = document.querySelector('input[name="answer"]:checked');
+    if (selectedOption) {
+        const questionValue = selectedOption.value;
+        const url = `{{ url_for('dysgraphia.send_to_chat') }}?question=${encodeURIComponent(questionValue)}`;
+        this.setAttribute("href", url);
+        window.location.href = url;
+    }
+});
+
+</script>
 {% endblock %}
