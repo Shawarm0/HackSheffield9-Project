@@ -1,5 +1,172 @@
 {% extends "base.html"%}
 
 {%block content%}
-    <h1>Dysgraphia</h1>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Record Audio</title>
+    <style>
+        #new-idea-div{
+            display: none;
+        }
+
+        #send-to-chat-btn{
+            display: none;
+        }
+            
+        /* Spinner styles */
+        #loading-spinner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none; /* Initially hidden */
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Audio Recorder</h1>
+    <button id="record-btn">Record</button>
+    <button id="stop-btn" disabled>Stop</button>
+
+    <div id="results-container"></div>
+
+    <div>
+        <br>
+        <a id="send-to-chat-btn" href="#">Send to Chat</a>
+        <br>
+    </div>
+
+    <div id="new-idea-div">
+        <br>
+        <button id="new-idea-button">Start a new idea!</button>
+    </div>
+
+    <div id="loading-spinner"></div>
+
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+
+        document.getElementById("record-btn").addEventListener("click", async () => {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.ondataavailable = (event) => {
+                audioChunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = async () => {
+                const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+                const formData = new FormData();
+                formData.append("audio_data", audioBlob, "recorded_audio.wav");
+                document.getElementById("record-btn").disabled = true;
+
+                const spinner = document.getElementById("loading-spinner");
+                spinner.style.display = "block";
+
+                // Send the audio to the server
+                const response = await fetch("/upload_audio", {
+                    method: "POST",
+                    body: formData,
+                });
+                
+                const result = await response.json();
+                document.getElementById("record-btn").disabled = false;
+                document.getElementById("record-btn").style.display = "none";
+                document.getElementById("stop-btn").style.display = "none";
+
+                document.getElementById("new-idea-div").style.display = "block";
+                document.getElementById("send-to-chat-btn").style.display = "block";
+                
+                spinner.style.display = "none";
+                document.getElementById("record-btn").disabled = false;
+
+                const resultsContainer = document.getElementById("results-container");
+                resultsContainer.innerHTML = '';
+
+                const form = document.createElement("form");
+                form.action = "/reload_answer"; 
+                result.answers.forEach((answer, index) => {
+                    const label = document.createElement("label");
+                    const radio = document.createElement("input");
+                    radio.type = "radio";
+                    radio.name = "answer";
+                    radio.value = answer;
+                    radio.id = `answer-${index}`;
+
+                    label.appendChild(radio);
+                    label.appendChild(document.createTextNode(answer));
+                    form.appendChild(label);
+                    form.appendChild(document.createElement("br")); // Line break for better readability
+                });
+                
+                // button to submit the form
+                const submitButton = document.createElement("button");
+                submitButton.textContent = "Submit";
+                submitButton.type = "submit";
+                form.appendChild(submitButton);
+
+                resultsContainer.appendChild(form);
+
+            };
+
+            mediaRecorder.start();
+            document.getElementById("record-btn").disabled = true;
+            document.getElementById("stop-btn").disabled = false;
+        });
+
+        document.getElementById("stop-btn").addEventListener("click", () => {
+            mediaRecorder.stop();
+            document.getElementById("record-btn").disabled = false;
+            document.getElementById("stop-btn").disabled = true;
+            audioChunks = []; // Clear chunks for the next recording
+        });
+
+        document.getElementById("new-idea-button").addEventListener("click", () => {
+            location.reload();
+        });
+    
+
+        document.getElementById('send-to-chat-btn').addEventListener('click', function(event) {
+            event.preventDefault();
+
+            const selectedOption = document.querySelector('input[name="answer"]:checked');
+
+            if (selectedOption) {
+                const questionValue = selectedOption.value;
+                const url = `{{ url_for('dysgraphia.send_to_chat') }}?question=${encodeURIComponent(questionValue)}`;
+
+                this.setAttribute('href', url);
+
+                window.location.href = url;
+            } else {
+                // alert('Please select an option before sending to chat.');
+            }
+        });
+        
+
+    </script>
+</body>
+</html>
 {%endblock%}
