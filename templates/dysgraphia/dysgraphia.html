@@ -1,112 +1,98 @@
-{% extends "base.html"%}
+{% extends "base.html" %}
 
-{%block content%}
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center text-primary mb-4">Audio Recorder</h2>
+        <div class="text-center">
+            <button id="record-btn" class="btn btn-success btn-lg shadow">Record</button>
+            <button id="stop-btn" class="btn btn-danger btn-lg shadow" disabled>Stop</button>
+        </div>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Record Audio</title>
-    <style>
-        #new-idea-div{
-            display: none;
-        }
+        <div id="results-container" class="mt-4"></div>
 
-        #send-to-chat-btn{
-            display: none;
-        }
-            
-        /* Spinner styles */
-        #loading-spinner {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1000;
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #3498db;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            display: none; /* Initially hidden */
-        }
+        <div class="text-center mt-4">
+            <a id="send-to-chat-btn" href="#" class="btn btn-primary btn-lg shadow" style="display: none;">Send to Chat</a>
+        </div>
 
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
-</head>
-<body>
-    <h1>Audio Recorder</h1>
-    <button id="record-btn">Record</button>
-    <button id="stop-btn" disabled>Stop</button>
-
-    <div id="results-container"></div>
-
-    <div>
-        <br>
-        <a id="send-to-chat-btn" href="#">Send to Chat</a>
-        <br>
+        <div id="new-idea-div" class="text-center mt-4" style="display: none;">
+            <button id="new-idea-button" class="btn btn-secondary btn-lg shadow">Start a New Idea</button>
+        </div>
     </div>
 
-    <div id="new-idea-div">
-        <br>
-        <button id="new-idea-button">Start a new idea!</button>
-    </div>
-
+    <!-- Spinner -->
     <div id="loading-spinner"></div>
+</div>
 
+<style>
+    #loading-spinner {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+        width: 50px;
+        height: 50px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        display: none;
+    }
 
-    <script>
-        let mediaRecorder;
-        let audioChunks = [];
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+</style>
 
-        document.getElementById("record-btn").addEventListener("click", async () => {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream);
+<script>
+    let mediaRecorder;
+    let audioChunks = [];
 
-            mediaRecorder.ondataavailable = (event) => {
-                audioChunks.push(event.data);
-            };
+    document.getElementById("record-btn").addEventListener("click", async () => {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
 
-            mediaRecorder.onstop = async () => {
-                const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
-                const formData = new FormData();
-                formData.append("audio_data", audioBlob, "recorded_audio.wav");
-                document.getElementById("record-btn").disabled = true;
+        mediaRecorder.ondataavailable = (event) => {
+            audioChunks.push(event.data);
+        };
 
-                const spinner = document.getElementById("loading-spinner");
-                spinner.style.display = "block";
+        mediaRecorder.onstop = async () => {
+            const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+            const formData = new FormData();
+            formData.append("audio_data", audioBlob, "recorded_audio.wav");
 
-                // Send the audio to the server
+            const spinner = document.getElementById("loading-spinner");
+            spinner.style.display = "block";
+
+            // Keep the "Record" button disabled
+            document.getElementById("record-btn").disabled = true;
+
+            // Send the audio to the server
+            try {
                 const response = await fetch("/upload_audio", {
                     method: "POST",
                     body: formData,
                 });
-                
+
                 const result = await response.json();
-                document.getElementById("record-btn").disabled = false;
+                spinner.style.display = "none";
+
                 document.getElementById("record-btn").style.display = "none";
                 document.getElementById("stop-btn").style.display = "none";
-
                 document.getElementById("new-idea-div").style.display = "block";
                 document.getElementById("send-to-chat-btn").style.display = "block";
-                
-                spinner.style.display = "none";
-                document.getElementById("record-btn").disabled = false;
 
                 const resultsContainer = document.getElementById("results-container");
-                resultsContainer.innerHTML = '';
+                resultsContainer.innerHTML = "";
 
                 const form = document.createElement("form");
-                form.action = "/reload_answer"; 
+                form.action = "/reload_answer";
                 result.answers.forEach((answer, index) => {
                     const label = document.createElement("label");
                     const radio = document.createElement("input");
@@ -114,59 +100,54 @@
                     radio.name = "answer";
                     radio.value = answer;
                     radio.id = `answer-${index}`;
-
                     label.appendChild(radio);
                     label.appendChild(document.createTextNode(answer));
                     form.appendChild(label);
-                    form.appendChild(document.createElement("br")); // Line break for better readability
+                    form.appendChild(document.createElement("br"));
                 });
-                
-                // button to submit the form
+
                 const submitButton = document.createElement("button");
-                submitButton.textContent = "Submit";
+                submitButton.textContent = "Try Again";
                 submitButton.type = "submit";
+                submitButton.classList.add("btn", "btn-primary", "mt-3");
                 form.appendChild(submitButton);
 
                 resultsContainer.appendChild(form);
-
-            };
-
-            mediaRecorder.start();
-            document.getElementById("record-btn").disabled = true;
-            document.getElementById("stop-btn").disabled = false;
-        });
-
-        document.getElementById("stop-btn").addEventListener("click", () => {
-            mediaRecorder.stop();
-            document.getElementById("record-btn").disabled = false;
-            document.getElementById("stop-btn").disabled = true;
-            audioChunks = []; // Clear chunks for the next recording
-        });
-
-        document.getElementById("new-idea-button").addEventListener("click", () => {
-            location.reload();
-        });
-    
-
-        document.getElementById('send-to-chat-btn').addEventListener('click', function(event) {
-            event.preventDefault();
-
-            const selectedOption = document.querySelector('input[name="answer"]:checked');
-
-            if (selectedOption) {
-                const questionValue = selectedOption.value;
-                const url = `{{ url_for('dysgraphia.send_to_chat') }}?question=${encodeURIComponent(questionValue)}`;
-
-                this.setAttribute('href', url);
-
-                window.location.href = url;
-            } else {
-                // alert('Please select an option before sending to chat.');
+            } catch (error) {
+                console.error("Error processing audio:", error);
+                spinner.style.display = "none";
+                alert("An error occurred while processing the audio. Please try again.");
+            } finally {
+                // Re-enable the "Record" button after completion
+                document.getElementById("record-btn").disabled = false;
             }
-        });
-        
+        };
 
-    </script>
-</body>
-</html>
-{%endblock%}
+        mediaRecorder.start();
+        document.getElementById("record-btn").disabled = true; // Disable while recording
+        document.getElementById("stop-btn").disabled = false;
+    });
+
+    document.getElementById("stop-btn").addEventListener("click", () => {
+        mediaRecorder.stop();
+        document.getElementById("stop-btn").disabled = true; // Disable "Stop" button
+        audioChunks = []; // Clear chunks for the next recording
+    });
+
+    document.getElementById("new-idea-button").addEventListener("click", () => {
+        location.reload();
+    });
+
+    document.getElementById("send-to-chat-btn").addEventListener("click", function (event) {
+        event.preventDefault();
+        const selectedOption = document.querySelector('input[name="answer"]:checked');
+        if (selectedOption) {
+            const questionValue = selectedOption.value;
+            const url = `{{ url_for('dysgraphia.send_to_chat') }}?question=${encodeURIComponent(questionValue)}`;
+            this.setAttribute("href", url);
+            window.location.href = url;
+        }
+    });
+</script>
+
+{% endblock %}
