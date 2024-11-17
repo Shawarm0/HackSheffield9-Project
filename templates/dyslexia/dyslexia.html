@@ -1,6 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
+<head>
+    <style>
+            /* Decorative icon for the chat section */
+            .container::before {
+                content: "📖";
+                position: absolute;
+                top: -20px;
+                left: -20px;
+                font-size: 2em;
+                color: #f39c12;
+            }
+    </style>
+</head>
 <div class="container mt-5" style="font-family: 'Comic Sans MS', 'Comic Sans', cursive;">
     <!-- Main Content Card -->
     <div class="card shadow-lg p-4">
@@ -11,8 +24,10 @@
                        border-radius: 8px; 
                        color: #fff; 
                        font-weight: bold;
-                       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);">
+                       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); 
+                       position: relative;">
                 Reading Buddy
+                <span style="position: absolute; top: 10px; right: 10px; font-size: 1.5em;"></span>
             </h1>
             <h2 class="text-secondary" style="font-size: 1.5rem;">Helping You Process Text with Ease</h2>
         </div>
