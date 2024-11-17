@@ -8,9 +8,10 @@ dyspraxia_bp = Blueprint("dyspraxia", __name__, template_folder="templates")
 UPLOAD_FOLDER = "static/images"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
 
-# Ensure the 'images' folder exists
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
+# Ensure the 'static/images' folder exists
+def create_static():
+    if not os.path.exists("static/images"):
+        os.makedirs("static/images")
 
 
 def allowed_file(filename):
@@ -28,6 +29,7 @@ def dyspraxia():
             return jsonify({"message": "No selected file"}), 400
 
         if file and allowed_file(file.filename):
+            create_static()
             # Secure the filename and save the file
             file_path = os.path.join(UPLOAD_FOLDER, "Figure.png")
             file.save(file_path)

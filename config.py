@@ -7,11 +7,8 @@ app = Flask(__name__)
 if __name__ == "__main__":
     app.run(debug=True)
 
-app.config["WTF_CSRF_ENABLED"] = False
-
-app.config["WTF_CSRF_ENABLED"] = False
+# I dont actually know if we need the UPLOAD_FOLDER variable but im keeping it anyway in case it breaks something. 
 app.config["UPLOAD_FOLDER"] = "images"
-
 app.config["WTF_CSRF_ENABLED"] = False
 
 # blueprints config - routing

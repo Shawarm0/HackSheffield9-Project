@@ -17,7 +17,7 @@ import io
 from pathlib import Path
 
 # Assuming media is the directory path
-media = Path("images") 
+media = Path("static/images") 
 
 
 def text_to_speech(text):
