@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Autism Text Reformulator</h2>
+    <form id="autism-form" method="POST">
+        <div class="row">
+            <!-- Input Box -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="text">Enter your text:</label>
+                    <textarea id="text" name="text" class="form-control" rows="10" placeholder="Type text here..."></textarea>
+                </div>
+            </div>
+            <!-- Output Box -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="output">Reformulated Text:</label>
+                    <textarea id="output" class="form-control" rows="10" readonly placeholder="Reformulated text will appear here..."></textarea>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+    </form>
+</div>
+
+<script>
+    const outputField = document.getElementById("output");
+    const submitButton = document.querySelector("button[type='submit']");
+
+    document.getElementById("autism-form").addEventListener("submit", async function (event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+
+        // Disable the submit button
+        submitButton.disabled = true;
+        submitButton.textContent = "Processing...";
+
+        const text = document.getElementById("text").value;
+
+        try {
+            // Send the input text to the Flask route via Fetch API
+            const response = await fetch("/autism", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ text: text })
+            });
+
+            if (response.ok) {
+                const data = await response.json(); // Parse JSON response
+                outputField.value = data.processed_text; // Update the output box
+            } else {
+                const errorData = await response.json();
+                outputField.value = errorData.error || "An error occurred.";
+                console.error("Error:", errorData);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            outputField.value = "An unexpected error occurred.";
+        } finally {
+            // Re-enable the submit button
+            submitButton.disabled = false;
+            submitButton.textContent = "Submit";
+        }
+    });
+</script>
+
+{% endblock %}
