@@ -11,30 +11,31 @@ from scipy.io.wavfile import write
 
 
 from flask import Blueprint, render_template
+import pyttsx3
 import io
 
+from pathlib import Path
 
-def text_to_speech(text, lang="en"):
-    """Convert the input text to speech and return as an in-memory audio file."""
-    tts = gTTS(text=text, lang=lang, slow=False)
-    # Create an in-memory buffer to store the speech audio
-    speech_buffer = io.BytesIO()
-    tts.save(speech_buffer)
-    speech_buffer.seek(0)  # Move to the beginning of the buffer
-    return speech_buffer
+# Assuming media is the directory path
+media = Path("images") 
 
 
-def speak():
-    """Receive text, convert it to speech, and return the audio file in-memory for playback."""
-    text = request.form.get("text")  # Get the text from the POST request
-    if not text:
-        return "No text provided", 400  # Return an error if no text is provided
+def text_to_speech(text):
+    # Initialize the speech engine
+    engine = pyttsx3.init()
 
-    # Generate speech from text and get the in-memory file
-    speech_buffer = text_to_speech(text)
+    # Set properties like rate (speed) and volume (0.0 to 1.0)
+    engine.setProperty('rate', 150)  # Speed of speech
+    engine.setProperty('volume', 1)  # Volume level (0.0 to 1.0)
 
-    # Send the generated speech as an audio file in-memory for playback
-    return Response(speech_buffer, mimetype="audio/mp3")
+    # Split the input text into lines
+    lines = text.splitlines()
+
+    # Convert each line to speech
+    for line in lines:
+        if line.strip():  # Skip empty lines
+            engine.say(line)
+            engine.runAndWait() 
 
 
 def speech_to_text(file_name: str):
@@ -80,3 +81,15 @@ def record_audio(filename="output.wav", duration=10, sample_rate=44100):
         print(f"Recording saved to {filename}")
     except Exception as e:
         print(f"An error occurred: {e}")
+
+
+def image_to_gemini():
+    genai.configure(api_key="AIzaSyBK7p-x-WsOzMTWXEfEOoSeRF-CWZ98JGU")
+    myfile = genai.upload_file(media / "Figure.png")
+
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    result = model.generate_content(
+    [myfile, "\n\n", "The picture is from a dyslexic person can you try your best to decypher it. If there are some words that are indecypherable can you use context clues to fill in the gaps. In your reply only include the text you think is displayed. Nothing else."]
+    )
+    return result.text
+       

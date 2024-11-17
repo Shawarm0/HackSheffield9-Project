@@ -7,6 +7,8 @@ instance/*
 .webassets-cache
 .env
 
+images
+
 ### Flask.Python Stack ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -35,6 +37,10 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+
+static
+
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

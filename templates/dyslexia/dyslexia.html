@@ -1,5 +1,68 @@
-{% extends "base.html"%}
+{% extends "base.html" %}
 
-{%block content%}
-    <h1>Dyslexia</h1>
-{%endblock%}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Text to Speech for Dyslexia Support</h2>
+    <form id="dyslexia-form" method="POST">
+        <div class="row">
+            <!-- Input Box -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="text">Enter your text:</label>
+                    <textarea id="text" name="text" class="form-control" rows="10" placeholder="Type text here..."></textarea>
+                </div>
+            </div>
+            <!-- Output Box -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="output">Processed Text:</label>
+                    <textarea id="output" class="form-control" rows="10" readonly placeholder="Processed text will appear here..."></textarea>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+        <button type="button" id="quit-button" class="btn btn-danger mt-3 d-none">Quit</button>
+    </form>
+</div>
+
+<script>
+    const quitButton = document.getElementById("quit-button");
+    const outputField = document.getElementById("output");
+
+    document.getElementById("dyslexia-form").addEventListener("submit", async function (event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+        const text = document.getElementById("text").value;
+
+        // Send the input text to the Flask route via Fetch API
+        const response = await fetch("/dyslexia", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ text: text })
+        });
+
+        // Handle the response
+        if (response.ok) {
+            const data = await response.json(); // Parse JSON response
+            outputField.value = data.processed_text; // Update the output box
+            quitButton.classList.remove("d-none"); // Show the quit button
+        } else {
+            console.error("Failed to process text.");
+        }
+    });
+
+    quitButton.addEventListener("click", async function () {
+        // Send a request to stop the TTS process
+        const response = await fetch("/dyslexia/quit", { method: "POST" });
+
+        if (response.ok) {
+            outputField.value = ""; // Clear the output box
+            quitButton.classList.add("d-none"); // Hide the quit button
+        } else {
+            console.error("Failed to stop TTS.");
+        }
+    });
+</script>
+{% endblock %}
+

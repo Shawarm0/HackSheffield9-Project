@@ -19,13 +19,14 @@ Flask-PyMongo
 sounddevice 
 scipy 
 
+#for tts
+pyttsx3
+
 #whisper
 git+https://github.com/openai/whisper.git
 # openai-whisper
 ffmpeg
 tiktoken
-# text to speech
-gTTS
 
 #gemini 
 google-generativeai

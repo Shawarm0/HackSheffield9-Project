@@ -1,5 +1,68 @@
-{% extends "base.html"%}
+{% extends "base.html" %}
 
-{%block content%}
-    <h1>Dyspraxia</h1>
-{%endblock%}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">File Upload for Dyspraxia Support</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Upload Your File</h5>
+                    <form id="dyspraxia-form" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="file">Choose a file to upload:</label>
+                            <input type="file" id="file" name="file" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3 w-100">Upload</button>
+                    </form>
+                    <div id="status-message" class="mt-3 text-center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Display uploaded image and processed text -->
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6">
+            <!-- The image will be updated dynamically here -->
+            <img id="uploaded-image" src="{{ url_for('static', filename='images/Figure.png') }}" alt="Uploaded Image" class="img-fluid" style="max-height: 300px;">
+            <textarea id="output" class="form-control mt-3" rows="10" readonly placeholder="Processed text will appear here..."></textarea>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("dyspraxia-form").addEventListener("submit", async function (event) {
+        event.preventDefault(); // Prevent form from submitting normally
+        const formData = new FormData(this);
+
+        // Send the file to the Flask route via Fetch API
+        const response = await fetch("/dyspraxia", {
+            method: "POST",
+            body: formData
+        });
+
+        const statusMessage = document.getElementById("status-message");
+        const outputField = document.getElementById("output");
+        const uploadedImage = document.getElementById("uploaded-image");
+
+        if (response.ok) {
+            const data = await response.json(); // Parse JSON response
+            statusMessage.textContent = "File uploaded successfully!";
+            statusMessage.classList.add("text-success");
+            statusMessage.classList.remove("text-danger");
+
+            // Reload the image by updating the source
+            uploadedImage.src = "{{ url_for('static', filename='images/Figure.png') }}?" + new Date().getTime(); // Add a query parameter to force reload
+
+            // Display the processed text in the text area
+            outputField.value = data.gemini_text;
+        } else {
+            statusMessage.textContent = "Failed to upload file.";
+            statusMessage.classList.add("text-danger");
+            statusMessage.classList.remove("text-success");
+        }
+    });
+</script>
+{% endblock %}
+
