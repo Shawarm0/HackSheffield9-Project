@@ -3,110 +3,130 @@
 {% block content %}
     <head>
         <style>
+            /* General styling for the page */
             .home-page {
                 padding: 20px;
                 font-family: Arial, sans-serif;
-                line-height: 1.6;
+                line-height: 1.8;
+                background-color: #f8f9fa;
             }
 
+            /* Main title styling */
             .main-title {
-                font-size: 2.5em;
-                color: #333;
+                font-size: 2.8em;
+                color: #4a148c;
                 text-align: center;
-                margin-bottom: 10px;
+                font-weight: bold;
+                margin-bottom: 15px;
             }
 
+            /* Welcome text styling */
             .welcome-text {
                 text-align: center;
                 color: #555;
-                font-size: 1.2em;
-                margin-bottom: 30px;
+                font-size: 1.3em;
+                margin-bottom: 40px;
+                font-style: italic;
             }
 
+            /* Features section container */
             .features-section {
-                max-width: 800px;
+                max-width: 900px;
                 margin: 0 auto;
             }
 
+            /* Section title */
             .section-title {
-                font-size: 2em;
-                color: #444;
-                margin-bottom: 20px;
+                font-size: 2.2em;
+                color: #6a1b9a;
+                margin-bottom: 30px;
                 text-align: center;
+                border-bottom: 2px solid #e0e0e0;
+                display: inline-block;
+                padding-bottom: 5px;
             }
 
+            /* Individual feature cards */
             .feature {
-                background: #f9f9f9;
-                padding: 15px;
+                background: #ffffff;
+                padding: 20px;
                 margin-bottom: 20px;
                 border: 1px solid #ddd;
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                border-radius: 12px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
             }
 
+            /* Hover effect for feature cards */
+            .feature:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            }
+
+            /* Feature title */
             .feature-title {
-                font-size: 1.5em;
-                color: #222;
-                margin-bottom: 10px;
+                font-size: 1.8em;
+                color: #333;
+                margin-bottom: 12px;
+                border-left: 4px solid #6a1b9a;
+                padding-left: 10px;
             }
 
+            /* Feature description */
             .feature-description {
-                font-size: 1em;
+                font-size: 1.1em;
                 color: #555;
-                margin: 0;
+                line-height: 1.6;
+            }
+
+            /* Highlight important text */
+            .feature-description strong {
+                color: #6a1b9a;
             }
         </style>
     </head>
     <div class="home-page">
-        <h1 class="main-title">Home Page</h1>
-        <p class="welcome-text">Welcome to the home page</p>
+        <h1 class="main-title">Accessibility Features</h1><br><br>
 
         <section class="features-section">
-            <h2 class="section-title">Accessibility Features</h2>
-
             <div class="feature" id="dysgraphia">
                 <h3 class="feature-title">Dysgraphia</h3>
                 <p class="feature-description">
-                    Easily transform your spoken thoughts into written ideas. The feature listens to your speech, simplifies it, and offers three 
-                    potential prompts that align with your intended meaning. Choose the most fitting option, or request the model to refine your 
-                    ideas further. Once satisfied, seamlessly send the output into the chat.
+                    Transform your <strong>spoken thoughts into written ideas</strong> effortlessly. This feature listens to your speech, simplifies it, and offers
+                    three potential prompts that match your intended meaning. Choose the best fit or refine further, and seamlessly
+                    send the output into the chat.
                 </p>
             </div>
 
             <div class="feature" id="dyslexia">
                 <h3 class="feature-title">Dyslexia</h3>
                 <p class="feature-description">
-                    Enhance reading accessibility with text-to-speech conversion. This feature reads text aloud while also presenting a simplified 
-                    version for easier understanding, helping you grasp the core message without unnecessary complexity.
+                    Experience enhanced reading accessibility with <strong>text-to-speech conversion</strong>. The feature reads text aloud and provides
+                    a simplified version for easier understanding, helping you grasp the core message effortlessly.
                 </p>
             </div>
 
             <div class="feature" id="dyspraxia">
                 <h3 class="feature-title">Dyspraxia</h3>
                 <p class="feature-description">
-                    Turn your handwriting into editable text effortlessly. Upload an image of your handwritten notes, and the feature will 
-                    accurately interpret and convert it into clear, digital text, ready for further use or sharing.
+                    Turn your <strong>handwriting into text</strong>, by uploading an image of your handwritten notes. The feature will interpret
+                    and convert it into clear, digital text, ready for use or sharing.
                 </p>
-            </div>
-
-            <div class="feature" id="dyscalculia">
-                <h3 class="feature-title">Dyscalculia</h3>
-                <p class="feature-description">Coming soon: Tools and features to assist with numerical understanding and calculations.</p>
             </div>
 
             <div class="feature" id="autism">
                 <h3 class="feature-title">Autism</h3>
                 <p class="feature-description">
-                    Simplify communication with a chat assistant designed for clarity. It translates complex language, such as slang or idioms, 
-                    into straightforward expressions, making conversations more accessible and easier to understand.
+                    Simplify communication with a chat assistant designed for clarity. It <strong>translates complex language</strong>, such as slang
+                    or idioms, into straightforward expressions, making conversations more accessible and easy to understand.
                 </p>
             </div>
 
             <div class="feature" id="ai-chat">
                 <h3 class="feature-title">AI Chat</h3>
                 <p class="feature-description">
-                    Engage with a versatile AI assistant for all your queries and needs. Whether you're seeking information, advice, or creative 
-                    ideas, this general-purpose chat is here to help in a natural and intuitive way.
+                    Interact with a <strong>versatile AI assistant</strong> for all your needs. Whether it's information, advice, or creative ideas, this feature is
+                    here to provide natural and intuitive assistance.
                 </p>
             </div>
         </section>
