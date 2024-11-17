@@ -1,7 +1,7 @@
-from flask import Blueprint, jsonify, redirect, render_template, request, url_for
+from flask import Blueprint, jsonify, render_template, request
 
 from controllers.chat.forms import ChatForm
-from controllers.dysgraphia.forms import DysgraphiaForm
+from markdown import markdown
 from controllers.utils import speech_to_text, send_to_gemini
 
 
@@ -66,9 +66,9 @@ def send_to_chat():
         question = "There was something wrong!"
 
     previous_gemini_response = chat_history[-1]["gemini"] if chat_history else ""  # type: ignore
-    prompt = f"You will receive the use r's message and your previous response. Here is the user's message: {question}. Here is your previous response: {previous_gemini_response}. Please respond thoughtfully."
+    prompt = f"You will receive the user's message and your previous response. Here is the user's message: {question}. Here is your previous response: {previous_gemini_response}. Please respond thoughtfully."
     gemini_response = send_to_gemini(prompt, question)
 
-    chat_history.append({"user": question, "gemini": gemini_response})  # type: ignore
+    chat_history.append({"user": markdown(question), "gemini": markdown(gemini_response)})  # type: ignore
 
     return render_template("chat/chat.html", form=form, chat_history=chat_history)

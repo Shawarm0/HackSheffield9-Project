@@ -1,97 +1,124 @@
-{% extends "base.html"%}
+{% extends "base.html" %}
 
-{%block content%}
+{% block content %}
+<div class="container mt-5" style="font-family: 'Comic Sans MS', 'Comic Sans', cursive;">
+    <div class="card shadow-lg p-4">
+        <div class="text-center mb-4">
+            <h1 class="text-white py-3" 
+                style="background: linear-gradient(90deg, #f39c12, #e74c3c); 
+                       border-radius: 8px; 
+                       color: #fff; 
+                       font-weight: bold;
+                       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);">
+                Record Your Best Ideas and Questions!
+            </h1>
+            <h2 class="text-secondary" style="font-size: 1.5rem;">Turn your thoughts into words.</h2>
+        </div>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Record Audio</title>
-    <style>
+        <div class="text-center mt-4">
+            <p class="text-secondary" style="font-size: 1.2rem;">Please select the idea that best aligns with what you intended to explain; the chosen option will be sent to the chat for a response, or the feature will regenerate options based on your selection.</p>
+        </div>
+        <div id="results-container" class="mt-4">
+            <form id="form" action="/reload_answer" method="POST">
+                {% for answer in answers %}
+                    <div class="card-option mb-3 card">
+                        <div class="card-body">
+                            <label class="d-flex align-items-center">
+                                <input type="radio" name="answer" value="{{answer}}" id="answer-{{ loop.index }}"> 
+                                {{ answer }}
+                            </label>
+                        </div>
+                    </div>
+                    <br>
+                {% endfor %}
+                <button type="submit" class="btn btn-secondary mt-3">Regenerate Ideas</button>
+            </form>
+        </div>
 
-        /* Spinner styles */
-        #loading-spinner {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1000;
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #3498db;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            display: none; /* Initially hidden */
-        }
-
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
-</head>
-<body>
-    <h1>Audio Recorder</h1>
-
-    <div id="results-container">
-        <form id="form" action="/reload_answer" method="POST">
-            {% for answer in answers %}
-                <label>
-                    <input type="radio" name="answer" value="{{answer}}" id="answer-{{ loop.index }}">
-                    {{ answer }}
-                </label>
-                <br>
-            {% endfor %}
-            <br>
-            <button type="submit">Submit</button>
-        </form>
-
+        <div class="text-center mt-4">
+            <a id="send-to-chat-btn" href="#" class="btn btn-secondary btn-lg shadow" style="font-weight: bold;">Send your idea/question to Chat</a>
+        </div>
+        <div id="new-idea-div" class="text-center mt-4">
+            <button id="new-idea-button" class="btn btn-success btn-lg shadow" style="font-weight: bold;">Start a New Idea</button>
+        </div>
     </div>
 
-    <div>
-        <br>
-        <a id="send-to-chat-btn" href="#">Send to Chat</a>
-        <br>
-    </div>
-
-    <div>
-        <br>
-        <button id="new-idea-button">Start a new idea!</button>
-    </div>
-
+    <!-- Spinner -->
     <div id="loading-spinner"></div>
+</div>
 
+<style>
+    /* Spinner styles */
+    #loading-spinner {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+        width: 50px;
+        height: 50px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #007bff; /* Match link color */
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        display: none;
+    }
 
-    <script>
+    #subtitle-options {
+        display: none;
+    }
 
-        document.getElementById("new-idea-button").addEventListener("click", () => {
-            window.location.href = "/dysgraphia";
-        });
+    .card-option:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-        document.getElementById('send-to-chat-btn').addEventListener('click', function(event) {
-            event.preventDefault();
+    .card-option {
+        background-color: #feead055;
+    }
 
-            const selectedOption = document.querySelector('input[name="answer"]:checked');
+    .btn-secondary {
+        background-color: grey;
+        border-color: grey;
+    }
 
-            if (selectedOption) {
-                const questionValue = selectedOption.value;
-                const url = `{{ url_for('dysgraphia.send_to_chat') }}?question=${encodeURIComponent(questionValue)}`;
+    .btn-success {
+        background-color: green;
+        border-color: green;
+    }
 
-                this.setAttribute('href', url);
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+</style>
 
-                window.location.href = url;
-            } else {
-                // alert('Please select an option before sending to chat.');
-            }
-        });
+<script>
+    document.getElementById("new-idea-button").addEventListener("click", () => {
+        window.location.href = "/dysgraphia";
+    });
 
-    </script>
-</body>
-</html>
-{%endblock%}
+    document.getElementById('send-to-chat-btn').addEventListener('click', function(event) {
+        event.preventDefault();
+
+        const selectedOption = document.querySelector('input[name="answer"]:checked');
+
+        if (selectedOption) {
+            const questionValue = selectedOption.value;
+            const url = `{{ url_for('dysgraphia.send_to_chat') }}?question=${encodeURIComponent(questionValue)}`;
+
+            this.setAttribute('href', url);
+
+            window.location.href = url;
+        } else {
+            // alert('Please select an option before sending to chat.');
+        }
+    });
+</script>
+
+{% endblock %}

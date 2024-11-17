@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify
 from .forms import ChatForm
 from controllers.utils import send_to_gemini
+from markdown import markdown
 
 chat_bp = Blueprint("chat", __name__, template_folder="templates")
 
@@ -20,12 +21,12 @@ def chat():
         previous_gemini_response = chat_history[-1]["gemini"] if chat_history else ""  # type: ignore
 
         # Prompt for Gemini including the user's latest message and Gemini's previous response
-        prompt = f"You will receive the use r's message and your previous response. Here is the user's message: {user_message}. Here is your previous response: {previous_gemini_response}. Please respond thoughtfully."
+        prompt = f"You will receive the use r's message and your previous response. Here is the user's message: {user_message}. Here is your previous response: {previous_gemini_response}. Please respond thoughtfully. Generate your response in markdown"
 
         # Send to Gemini and retrieve response
         gemini_response = send_to_gemini(prompt, user_message)
 
         # Append responses to chat history
-        chat_history.append({"user": user_message, "gemini": gemini_response})  # type: ignore
+        chat_history.append({"user": markdown(user_message), "gemini": markdown(gemini_response)})  # type: ignore
 
     return render_template("chat/chat.html", form=form, chat_history=chat_history)

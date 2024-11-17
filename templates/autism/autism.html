@@ -1,29 +1,63 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2 class="text-center">Autism Text Reformulator</h2>
-    <form id="autism-form" method="POST">
-        <div class="row">
-            <!-- Input Box -->
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="text">Enter your text:</label>
-                    <textarea id="text" name="text" class="form-control" rows="10" placeholder="Type text here..."></textarea>
-                </div>
-            </div>
-            <!-- Output Box -->
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="output">Reformulated Text:</label>
-                    <textarea id="output" class="form-control" rows="10" readonly placeholder="Reformulated text will appear here..."></textarea>
-                </div>
-            </div>
+<head>
+    <style>
+            /* Decorative icon for the chat section */
+            .container::before {
+                content: "🔍";
+                position: absolute;
+                top: -20px;
+                left: -20px;
+                font-size: 2em;
+                color: #f39c12;
+            }
+    </style>
+</head>
+<div class="container mt-5" style="font-family: 'Comic Sans MS', 'Comic Sans', cursive;">
+    <!-- Main Content Card -->
+    <div class="card shadow-lg p-4">
+        <!-- Header Section -->
+        <div class="text-center mb-4">
+            <h1 class="text-white py-3" 
+                style="background: linear-gradient(90deg, #f39c12, #e74c3c); 
+                       border-radius: 8px; 
+                       color: #fff; 
+                       font-weight: bold;
+                       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);">
+                Literal Lens
+            </h1>
+            <h2 class="text-secondary" style="font-size: 1.5rem;">Making Texts Clear and Direct</h2>
         </div>
-        <button type="submit" class="btn btn-primary mt-3">Submit</button>
-    </form>
+
+        <!-- Form Section -->
+        <form id="autism-form" method="POST">
+            <div class="row">
+                <!-- Input Box -->
+                <div class="col-md-6 mb-4">
+                    <div class="form-group">
+                        <label for="text" class="font-weight-bold">Enter Your Text to Be Simplified:</label>
+                        <textarea id="text" name="text" class="form-control shadow-sm" rows="8" placeholder="Type text here..."></textarea>
+                    </div>
+                </div>
+                <!-- Output Box -->
+                <div class="col-md-6 mb-4">
+                    <div class="form-group">
+                        <label for="output" class="font-weight-bold">Literal Meaning of Your Text:</label>
+                        <textarea id="output" class="form-control shadow-sm bg-light" rows="8" readonly placeholder="Reformulated text will appear here..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <!-- Submit Button -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-success btn-lg shadow" 
+                        style="font-weight: bold;">Simplify Text</button>
+            </div>
+        </form>
+    </div>
 </div>
 
+<!-- JavaScript Section -->
 <script>
     const outputField = document.getElementById("output");
     const submitButton = document.querySelector("button[type='submit']");
@@ -61,9 +95,8 @@
         } finally {
             // Re-enable the submit button
             submitButton.disabled = false;
-            submitButton.textContent = "Submit";
+            submitButton.textContent = "Simplify Text";
         }
     });
 </script>
-
 {% endblock %}

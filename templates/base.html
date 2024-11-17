@@ -1,45 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
-
-
 <head>
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1">
-   <title>CSC2031</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>GrowthPath</title>
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
-</head>
-
-
-<body>
    <style>
-       .table {
-           margin-left: auto;
-           margin-right: auto;
+       body {
+           font-family: Arial, sans-serif;
+           background: linear-gradient(120deg, #f6d365, #fda085);
+           color: #333;
+           line-height: 1.6;
+       }
+
+       .nav-pills {
+           justify-content: center;
+       }
+
+       .nav-pills .nav-link {
+           color: #ffffff;
+           font-weight: bold;
+           background: transparent; /* Default transparent background */
+           margin: 5px;
+           border-radius: 4px; /* Rectangular shape */
+           padding: 10px 20px;
+           transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+       }
+
+       .nav-pills .nav-link:hover {
+           background: linear-gradient(90deg, #007bff, #62bdfc);
+           color: #fff;
+           transform: scale(1.05);
+       }
+
+       .nav-pills .nav-link.active {
+           background: transparent; /* Keep active state plain */
+           color: #007bff;
+           font-weight: bold;
+       }
+
+       .container-fluid {
+           max-width: 1200px;
+           margin: 0 auto;
+       }
+
+       .content-section {
+           background: #fff;
+           padding: 30px;
+           border-radius: 12px;
+           box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+           margin-top: 30px;
+           border-left: 8px solid #007bff;
+           transition: transform 0.3s ease, box-shadow 0.3s ease;
+       }
+
+       .content-section:hover {
+           transform: scale(1.02);
+           box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+       }
+
+       h1, h3 {
+           font-weight: bold;
+       }
+
+       h1 {
+           text-transform: uppercase;
+           font-size: 2.5rem;
+           color: #fff;
+           text-align: center;
+           margin-bottom: 20px;
+           padding: 10px;
+           background: linear-gradient(90deg, #62bdfc, #82d4ff);
+           border-radius: 20px;
+           box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+       }
+
+       h3 {
+           color: #007bff;
+       }
+
+       a {
+           color: #007bff;
+           text-decoration: none;
+           transition: color 0.3s ease;
+       }
+
+       a:hover {
+           color: #62bdfc;
+           text-decoration: underline;
        }
    </style>
-
+</head>
+<body>
    <section class="container-fluid p-3 my-3">
-
-       <nav class="nav nav-pills flex-column flex-sm-row">
+       <!-- Navigation Bar -->
+       <nav class="nav nav-pills flex-column flex-sm-row mb-4">
            <a class="nav-item nav-link" href="{{ url_for('index') }}">Home</a>
-            <a class="nav-item nav-link" href="{{ url_for('dyscalculia.dyscalculia') }}">Dyscalculia</a>
-            <a class="nav-item nav-link" href="{{ url_for('dysgraphia.dysgraphia') }}">Dysgraphia</a>
-            <a class="nav-item nav-link" href="{{ url_for('dyslexia.dyslexia') }}">Dyslexia</a>
-            <a class="nav-item nav-link" href="{{ url_for('dyspraxia.dyspraxia') }}">Dyspraxia</a>
-            <a class="nav-item nav-link" href="{{ url_for('autism.autism') }}">Autism</a>
-            <a class="nav-item nav-link" href="{{ url_for('chat.chat') }}">Chat</a>
+           <a class="nav-item nav-link" href="{{ url_for('dysgraphia.dysgraphia') }}">Thoughts into Words</a>
+           <a class="nav-item nav-link" href="{{ url_for('dyslexia.dyslexia') }}">Reading Buddy</a>
+           <a class="nav-item nav-link" href="{{ url_for('dyspraxia.dyspraxia') }}">Handwriting Interpreter</a>
+           <a class="nav-item nav-link" href="{{ url_for('autism.autism') }}">Literal Lens</a>
+           <a class="nav-item nav-link" href="{{ url_for('chat.chat') }}">Chat</a>
        </nav>
 
-
-       <div class="container-fluid p-3 my-5 text-center">
+       <!-- Content Section -->
+       <div class="content-section text-center">
            {% block content %}
-           <!-- The content of any template extending the base template will be embedded in this block -->
+           <!-- Content from extended templates will appear here -->
            {% endblock %}
        </div>
    </section>
 </body>
-
-
 </html>

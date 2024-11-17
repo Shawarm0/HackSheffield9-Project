@@ -1,68 +1,125 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2 class="text-center">Text to Speech for Dyslexia Support</h2>
-    <form id="dyslexia-form" method="POST">
-        <div class="row">
-            <!-- Input Box -->
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="text">Enter your text:</label>
-                    <textarea id="text" name="text" class="form-control" rows="10" placeholder="Type text here..."></textarea>
-                </div>
-            </div>
-            <!-- Output Box -->
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="output">Processed Text:</label>
-                    <textarea id="output" class="form-control" rows="10" readonly placeholder="Processed text will appear here..."></textarea>
-                </div>
-            </div>
+<head>
+    <style>
+            /* Decorative icon for the chat section */
+            .container::before {
+                content: "📖";
+                position: absolute;
+                top: -20px;
+                left: -20px;
+                font-size: 2em;
+                color: #f39c12;
+            }
+    </style>
+</head>
+<div class="container mt-5" style="font-family: 'Comic Sans MS', 'Comic Sans', cursive;">
+    <!-- Main Content Card -->
+    <div class="card shadow-lg p-4">
+        <!-- Header Section -->
+        <div class="text-center mb-4">
+            <h1 class="text-white py-3" 
+                style="background: linear-gradient(90deg, #f39c12, #e74c3c); 
+                       border-radius: 8px; 
+                       color: #fff; 
+                       font-weight: bold;
+                       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); 
+                       position: relative;">
+                Reading Buddy
+                <span style="position: absolute; top: 10px; right: 10px; font-size: 1.5em;"></span>
+            </h1>
+            <h2 class="text-secondary" style="font-size: 1.5rem;">Helping You Process Text with Ease</h2>
         </div>
-        <button type="submit" class="btn btn-primary mt-3">Submit</button>
-        <button type="button" id="quit-button" class="btn btn-danger mt-3 d-none">Quit</button>
-    </form>
+
+        <!-- Form Section -->
+        <form id="dyslexia-form" method="POST">
+            <div class="row">
+                <!-- Input Box -->
+                <div class="col-md-6 mb-4">
+                    <div class="form-group">
+                        <label for="text" class="font-weight-bold">Enter Your Text:</label>
+                        <textarea id="text" name="text" class="form-control shadow-sm" rows="8" 
+                                  placeholder="Type text here..."></textarea>
+                    </div>
+                </div>
+                <!-- Output Box -->
+                <div class="col-md-6 mb-4">
+                    <div class="form-group">
+                        <label for="output" class="font-weight-bold">Processed Text:</label>
+                        <textarea id="output" class="form-control shadow-sm bg-light" rows="8" readonly 
+                                  placeholder="Processed text will appear here..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <!-- Button Section -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-success btn-lg shadow" style="font-weight: bold;">Process Text</button>
+                <button type="button" id="quit-button" class="btn btn-danger btn-lg shadow d-none" 
+                        style="font-weight: bold;">Quit</button>
+            </div>
+        </form>
+    </div>
 </div>
 
+<!-- JavaScript Section -->
 <script>
     const quitButton = document.getElementById("quit-button");
     const outputField = document.getElementById("output");
+    const submitButton = document.querySelector("button[type='submit']");
 
     document.getElementById("dyslexia-form").addEventListener("submit", async function (event) {
         event.preventDefault(); // Prevent the form from submitting normally
+
+        // Disable the submit button
+        submitButton.disabled = true;
+        submitButton.textContent = "Processing...";
+
         const text = document.getElementById("text").value;
 
-        // Send the input text to the Flask route via Fetch API
-        const response = await fetch("/dyslexia", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ text: text })
-        });
+        try {
+            // Send the input text to the Flask route via Fetch API
+            const response = await fetch("/dyslexia", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ text: text })
+            });
 
-        // Handle the response
-        if (response.ok) {
-            const data = await response.json(); // Parse JSON response
-            outputField.value = data.processed_text; // Update the output box
-            quitButton.classList.remove("d-none"); // Show the quit button
-        } else {
-            console.error("Failed to process text.");
+            if (response.ok) {
+                const data = await response.json(); // Parse JSON response
+                outputField.value = data.processed_text; // Update the output box
+                quitButton.classList.remove("d-none"); // Show the quit button
+            } else {
+                const errorData = await response.json();
+                outputField.value = errorData.error || "An error occurred.";
+                console.error("Error:", errorData);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            outputField.value = "An unexpected error occurred.";
+        } finally {
+            // Re-enable the submit button
+            submitButton.disabled = false;
+            submitButton.textContent = "Process Text";
         }
     });
 
     quitButton.addEventListener("click", async function () {
-        // Send a request to stop the TTS process
-        const response = await fetch("/dyslexia/quit", { method: "POST" });
+        try {
+            // Send a request to stop the TTS process
+            const response = await fetch("/dyslexia/quit", { method: "POST" });
 
-        if (response.ok) {
-            outputField.value = ""; // Clear the output box
-            quitButton.classList.add("d-none"); // Hide the quit button
-        } else {
-            console.error("Failed to stop TTS.");
+            if (response.ok) {
+                outputField.value = ""; // Clear the output box
+                quitButton.classList.add("d-none"); // Hide the quit button
+            } else {
+                console.error("Failed to stop TTS.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
         }
     });
 </script>
 {% endblock %}
-

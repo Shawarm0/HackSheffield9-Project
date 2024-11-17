@@ -31,6 +31,8 @@ tiktoken
 #gemini 
 google-generativeai
 
+markdown
+
 # below not used yet
 # # Flask Functionality Packages
 # Flask-Login
