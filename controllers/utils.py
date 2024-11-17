@@ -83,13 +83,13 @@ def record_audio(filename="output.wav", duration=10, sample_rate=44100):
         print(f"An error occurred: {e}")
 
 
-def image_to_gemini(file_name):
+def image_to_gemini():
     genai.configure(api_key="AIzaSyBK7p-x-WsOzMTWXEfEOoSeRF-CWZ98JGU")
-    myfile = genai.upload_file(media / file_name)
+    myfile = genai.upload_file(media / "Figure.png")
 
     model = genai.GenerativeModel("gemini-1.5-flash")
     result = model.generate_content(
-    [myfile, "\n\n", "What is written in the picture?"]
+    [myfile, "\n\n", "The picture is from a dyslexic person can you try your best to decypher it. If there are some words that are indecypherable can you use context clues to fill in the gaps. In your reply only include the text you think is displayed. Nothing else."]
     )
     return result.text
-    
+       

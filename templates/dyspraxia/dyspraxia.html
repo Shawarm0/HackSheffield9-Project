@@ -20,6 +20,15 @@
             </div>
         </div>
     </div>
+
+    <!-- Display uploaded image and processed text -->
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6">
+            <!-- The image will be updated dynamically here -->
+            <img id="uploaded-image" src="{{ url_for('static', filename='images/Figure.png') }}" alt="Uploaded Image" class="img-fluid" style="max-height: 300px;">
+            <textarea id="output" class="form-control mt-3" rows="10" readonly placeholder="Processed text will appear here..."></textarea>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -34,12 +43,20 @@
         });
 
         const statusMessage = document.getElementById("status-message");
+        const outputField = document.getElementById("output");
+        const uploadedImage = document.getElementById("uploaded-image");
 
         if (response.ok) {
             const data = await response.json(); // Parse JSON response
             statusMessage.textContent = "File uploaded successfully!";
             statusMessage.classList.add("text-success");
             statusMessage.classList.remove("text-danger");
+
+            // Reload the image by updating the source
+            uploadedImage.src = "{{ url_for('static', filename='images/Figure.png') }}?" + new Date().getTime(); // Add a query parameter to force reload
+
+            // Display the processed text in the text area
+            outputField.value = data.gemini_text;
         } else {
             statusMessage.textContent = "Failed to upload file.";
             statusMessage.classList.add("text-danger");
