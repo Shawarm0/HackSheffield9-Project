@@ -73,52 +73,23 @@
         }
 
         .btn-primary {
-            background-color: #28a745;
+            background-color: #f39c12;
+            border-color: #e67e22;
         }
 
         .btn-primary:hover {
-            background-color: #218838;
-        }
-
-        /* Green button */
-        .btn-green {
-            background-color: #2ecc71;
-            border-color: #27ae60;
-            color: white;
-            padding: 12px 24px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-            display: inline-block;
-        }
-
-        .btn-green:hover {
-            background-color: #27ae60;
-            border-color: #2ecc71;
+            background-color: #e67e22;
+            border-color: #f39c12;
         }
 
         .img-fluid {
             max-height: 300px;
         }
-
-    .dyspraxia-page::before {
-      content: "✍️";
-      position: absolute;
-      top: -20px;
-      left: -20px;
-      font-size: 2em;
-      color: #f39c12;
-      }
-
-        /* Hide the default file input button */
-        input[type="file"] {
-            display: none;
-        }
     </style>
 </head>
 
 <div class="dyspraxia-page">
-    <h2 class="main-title">LET'S UNDERSTAND YOUR HANDWRITING!</h2>
+    <h2 class="main-title">LET'S UNDERSTAND YOUR HANDRW!</h2>
 
     <!-- File Upload Section -->
     <section class="dyspraxia-card">
@@ -127,10 +98,8 @@
             <div class="form-group text-center">
                 <label for="file" class="font-weight-bold d-block mb-2">Choose a File to Upload</label>
                 <input type="file" id="file" name="file" class="form-control shadow-sm" required>
-                <!-- Custom Green Button -->
-                <label for="file" class="btn-secondary btn-lg shadow">Attach File</label>
             </div>
-            <button type="submit" class="btn btn-primary btn-lg shadow mt-4 w-50">Upload</button>
+            <button type="submit" class="btn btn-primary btn-lg shadow mt-4 w-100">Upload</button>
         </form>
         <div id="status-message" class="mt-3 text-center"></div>
     </section>
